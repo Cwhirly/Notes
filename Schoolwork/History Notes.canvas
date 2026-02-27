@@ -1,0 +1,33 @@
+{
+	"nodes":[
+		{"id":"71b38583ca92e80e","type":"text","text":"1840-1842","x":379,"y":201,"width":250,"height":60,"color":"3"},
+		{"id":"66ccf11ce38ff22a","type":"text","text":"鸦片战争（导致太平天国运动）","x":379,"y":300,"width":250,"height":60},
+		{"id":"13913a454e851fe3","type":"text","text":"### 南京条约 ：\n\n第一个不平等条约\n\n2100 万银元  \n割**香港岛**  \n广厦福宁上  \n领土，贸易，关税  \n","x":379,"y":400,"width":250,"height":240,"color":"4"},
+		{"id":"991d134cf7f7d802","type":"text","text":"中法《黄埔》","x":740,"y":400,"width":250,"height":60,"color":"4"},
+		{"id":"d742e6a8de1c06fc","type":"text","text":"中英《虎门》","x":740,"y":460,"width":250,"height":60,"color":"4"},
+		{"id":"523706b84e3f13a1","type":"text","text":"金田起义（1851）—— 定都天京（1853）——天京陷落（1864）","x":366,"y":80,"width":534,"height":60},
+		{"id":"a23ab22d0937ebc1","type":"text","text":"中英《五口通商章程》","x":740,"y":520,"width":250,"height":60,"color":"4"},
+		{"id":"9058364b7f07eb40","type":"text","text":"中美《望厦》","x":740,"y":580,"width":250,"height":60,"color":"4"},
+		{"id":"9aeacaaeb3554760","type":"text","text":"1. 领事裁判权\n2. 片面最惠国待遇\n3. 传教权\n4. 租地建房","x":740,"y":705,"width":250,"height":129},
+		{"id":"fe1a89a1d85f94c3","type":"text","text":"### 俄法英美：天津条约（1858）\n### 俄法美：北京条约（1860）\n\n英法联军：  \n800 万两白银  \n九龙半岛  \n开放：（主要）  \n\t天津（北京）  \n\t南京（天津）  \n外国商船可在长江各口岸往来  \n外籍传教士得入内地自由传教  ","x":1240,"y":434,"width":382,"height":365,"color":"4"},
+		{"id":"1d28571f96d0d726","type":"text","text":"二鸦","x":1240,"y":300,"width":250,"height":60},
+		{"id":"390c0e4118ab662f","type":"text","text":"1856-1860","x":1240,"y":201,"width":250,"height":60,"color":"3"},
+		{"id":"1de638c546850527","type":"text","text":"半殖民地半封建社会程度进一步加深","x":1240,"y":900,"width":250,"height":60},
+		{"id":"bcd03cb139ef5596","type":"text","text":"**开始**沦为半殖民地半封建社会","x":379,"y":770,"width":250,"height":60},
+		{"id":"7efd54372fe9a8d5","x":1720,"y":201,"width":250,"height":60,"type":"text","text":"[[History Notes II.canvas|History Notes II]]"}
+	],
+	"edges":[
+		{"id":"08e3af412e81ce6b","fromNode":"66ccf11ce38ff22a","fromSide":"left","toNode":"13913a454e851fe3","toSide":"left","label":"结果"},
+		{"id":"74bdf7b101b72eee","fromNode":"13913a454e851fe3","fromSide":"right","toNode":"991d134cf7f7d802","toSide":"left","label":"补充"},
+		{"id":"13ceeffdda776b36","fromNode":"13913a454e851fe3","fromSide":"right","toNode":"d742e6a8de1c06fc","toSide":"left"},
+		{"id":"2c5fb51d3d0ac08d","fromNode":"13913a454e851fe3","fromSide":"right","toNode":"a23ab22d0937ebc1","toSide":"left"},
+		{"id":"abce5b35f0c4c5af","fromNode":"13913a454e851fe3","fromSide":"right","toNode":"9058364b7f07eb40","toSide":"left"},
+		{"id":"61246462abdb106f","fromNode":"13913a454e851fe3","fromSide":"left","toNode":"bcd03cb139ef5596","toSide":"left","label":"危害"},
+		{"id":"ab7a794eacd452ea","fromNode":"71b38583ca92e80e","fromSide":"right","toNode":"390c0e4118ab662f","toSide":"left"},
+		{"id":"3db593b9426804b6","fromNode":"fe1a89a1d85f94c3","fromSide":"bottom","toNode":"1de638c546850527","toSide":"top","label":"危害"},
+		{"id":"9f9f31e9a94b5ae2","fromNode":"1d28571f96d0d726","fromSide":"right","toNode":"fe1a89a1d85f94c3","toSide":"right","label":"结果"},
+		{"id":"384ca5b0d033f795","fromNode":"66ccf11ce38ff22a","fromSide":"left","toNode":"523706b84e3f13a1","toSide":"left"},
+		{"id":"0e2146f3150398ec","fromNode":"d742e6a8de1c06fc","fromSide":"right","toNode":"9aeacaaeb3554760","toSide":"right","label":"《虎门》新增权利"},
+		{"id":"8366fd97ef9d8aa5","fromNode":"390c0e4118ab662f","fromSide":"right","toNode":"7efd54372fe9a8d5","toSide":"left"}
+	]
+}

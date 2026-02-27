@@ -1,0 +1,11 @@
+{
+  "execute-code:code-execute-open-manage-executors": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "R"
+    }
+  ]
+}
