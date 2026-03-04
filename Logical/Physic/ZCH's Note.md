@@ -1,4 +1,4 @@
-# 运动学
+z# 运动学
 $\vec{r}$ 位矢.
 $\dot{\vec{r}}=\dfrac{\mathrm{d}\vec{r}}{\mathrm{d}t}=\vec{v}$.  
 $\ddot{\vec{r}}=\dfrac{\mathrm{d}\dot{\vec{r}}}{\mathrm{d}t}=\vec{a}$.  

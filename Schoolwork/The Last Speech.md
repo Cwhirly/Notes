@@ -23,7 +23,7 @@ After the news of the reactionary assassination of Mr. Li spread, everyone was f
 
 If you kill one Li Gongpu, millions of Li Gongpu will stand up! You will lose millions of people! Do you see us with few people and no strength? Let me tell you, our power is great, strong! Look at these people who came today, they are all our people and our strength! In addition, there are also a large number of citizens! We have this confidence: the power of the people will triumph, and truth will always exist. There is no anti people force in history that is not destroyed by the people! Hitler, Mussolini, didn't they all fall before the people? Looking back at history, how many more days can you stand still? You're done, it's almost done! Almost done! Our light is about to appear. We see that the light is right in front of us, and now is the darkest time before dawn. We have the power to break through this darkness and strive for light! Our light is the end of the reactionaries!
 
-你们杀死一个[李公朴](https://baike.baidu.com/item/%E6%9D%8E%E5%85%AC%E6%9C%B4/1341724?fromModule=lemma_inlink)，会有千百万个李公朴站起来！你们将失去千百万的人民！你们看着我们人少，没有力量？告诉你们，我们的力量大得很，强得很！看今天来的这些人，都是我们的人，都是我们的力量！此外还有广大的市民！我们有这个信心：人民的力量是要胜利的，真理是永远存在的。历史上没有一个反人民的势力不被人民毁灭的！希特勒，[墨索里尼](https://baike.baidu.com/item/%E5%A2%A8%E7%B4%A2%E9%87%8C%E5%B0%BC/598689?fromModule=lemma_inlink)，不都在人民之前倒下去了吗？翻开历史看看，你们还站得住几天！你们完了，快了！快完了！我们的光明就要出现了。我们看，光明就在我们眼前，而现在正是黎明之前那个最黑暗的时候。我们有力量打破这个黑暗，争到光明！我们的光明，就是反动派的末日！
+你们杀死一个李公朴，会有千百万个李公朴站起来！你们将失去千百万的人民！你们看着我们人少，没有力量？告诉你们，我们的力量大得很，强得很！看今天来的这些人，都是我们的人，都是我们的力量！此外还有广大的市民！我们有这个信心：人民的力量是要胜利的，真理是永远存在的。历史上没有一个反人民的势力不被人民毁灭的！希特勒，墨索里尼，不都在人民之前倒下去了吗？翻开历史看看，你们还站得住几天！你们完了，快了！快完了！我们的光明就要出现了。我们看，光明就在我们眼前，而现在正是黎明之前那个最黑暗的时候。我们有力量打破这个黑暗，争到光明！我们的光明，就是反动派的末日！
 
 Mr. Li's blood will not flow in vain! Mr. Li sacrificed his life, we have to pay a price in return. The four martyrs of "December 1 st" fell, and the blood of young soldiers was exchanged for the convening of the Political Consultative Conference $\text{\color{gray}/pəˈlɪtɪkl}$ $\color{gray}{\text{kənˈsʌltətɪv}}$ $\color{gray}\text{ˈkɑːnfərəns}/$; Now that Mr. Li has fallen, his blood will be exchanged for the reopening of the meeting! We have this confidence!
 
@@ -31,7 +31,7 @@ Mr. Li's blood will not flow in vain! Mr. Li sacrificed his life, we have to pay
 
 "December 1st" is the glory of Kunming and the glory of the people of Yunnan. Yunnan has a glorious history, as far away as the National Protection War, it goes without saying, as close as "December 1 st", all belong to the people of Yunnan. We must carry forward the glorious history of Yunnan!
 
-“一二·一”是[昆明](https://baike.baidu.com/item/%E6%98%86%E6%98%8E/161012?fromModule=lemma_inlink)的光荣，是云南人民的光荣。云南有光荣的历史，远的如护国，这不用说了，近的如“一二·一”，都属于云南人民的。我们要发扬云南光荣的历史！
+“一二·一”是昆明的光荣，是云南人民的光荣。云南有光荣的历史，远的如护国，这不用说了，近的如“一二·一”，都属于云南人民的。我们要发扬云南光荣的历史！
 
 The reactionaries sow discord and are despicable and shameless. Do you think we have no power when you see the united university leaving and students on summer vacation? Agents! You see the more than a thousand young people present today, shaking hands again. Our Kunming youth will never let you continue to be so rude!
 
