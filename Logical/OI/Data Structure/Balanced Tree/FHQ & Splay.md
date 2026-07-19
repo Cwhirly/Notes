@@ -190,9 +190,9 @@ void spts(int p,int v,int &x,int &y){
 这里合并不能乱合并，而是要按照 $hp$ 合并，最终合并下来的树应该让每个节点的 $hp$ 满足堆的性质，即其 BFS 序满足 $hp$ 递增。
 ```cpp
 int mrge(int x,int y){
-		if(!x||!y) return x^y;
-		if(st[x].hp>st[y].hp){rs(x)=mrge(rs(x),y),maintain(x);return x;}
-		else{ls(y)=mrge(x,ls(y)),maintain(y);return y;}
+	if(!x||!y) return x^y;
+	if(st[x].hp>st[y].hp){rs(x)=mrge(rs(x),y),maintain(x);return x;}
+	else{ls(y)=mrge(x,ls(y)),maintain(y);return y;}
 }
 ```
 $x \operatorname{xor} y$ 其实返回的是两个中非零的一个。  
@@ -218,26 +218,26 @@ $x \operatorname{xor} y$ 其实返回的是两个中非零的一个。
 代码：  
 ```cpp
 inline void insert(int k){
-		if(!root){
-				val[++tot]=k;cnt[tot]++;
-				root=tot;maintain(tot);
-				return ;
+	if(!root){
+		val[++tot]=k;cnt[tot]++;
+		root=tot;maintain(tot);
+		return ;
+	}
+	int now=root,f=0;
+	while(true){
+		if(val[now]==k){
+			++cnt[now];
+			maintain(now);maintain(f);
+			splay(now);break;
 		}
-		int now=root,f=0;
-		while(true){
-				if(val[now]==k){
-						++cnt[now];
-						maintain(now);maintain(f);
-						splay(now);break;
-				}
-				f=now;now=ch[now][val[now]<k];
-				if(!now){
-						val[++tot]=k;++cnt[tot];
-						fa[tot]=f;ch[f][val[f]<k]=tot;
-						maintain(tot);maintain(f);
-						splay(tot);break;
-				}
+		f=now;now=ch[now][val[now]<k];
+		if(!now){
+			val[++tot]=k;++cnt[tot];
+			fa[tot]=f;ch[f][val[f]<k]=tot;
+			maintain(tot);maintain(f);
+			splay(tot);break;
 		}
+	}
 }
 ```
 ### FHQ Treap
@@ -256,16 +256,16 @@ inline void insert(int v){sptv(rt,v,x,y);rt=mrge(mrge(x,crte(v)),y);}
 如果树中根本没有节点的权值等于 $x$，那就不用 Splay 了（也无法 Splay 啊）。  
 ```cpp
 inline int rank(int k){
-		int ans=0,now=root;
-		while(1){
-				if(k<val[now]) now=ch[now][0];
-				else{
-						ans+=sz[ch[now][0]];
-						if(!now) return ans+1;
-						if(k==val[now]){splay(now);return ans+1;}
-						ans+=cnt[now];now=ch[now][1];
-				}
+	int ans=0,now=root;
+	while(1){
+		if(k<val[now]) now=ch[now][0];
+		else{
+			ans+=sz[ch[now][0]];
+			if(!now) return ans+1;
+			if(k==val[now]){splay(now);return ans+1;}
+			ans+=cnt[now];now=ch[now][1];
 		}
+	}
 }
 ```
 ### FHQ Treap
@@ -283,19 +283,19 @@ inline int vtor(int v){sptv(rt,v-1,x,y);int ans=st[x].sz+1;rt=mrge(x,y);return a
 逻辑比较简单，直接看注释。  
 ```cpp
 inline int askrank(int k){
-		int now=root;
-		while(true){
-				if(ch[now][0]&&k<=sz[ch[now][0]]) now=ch[now][0];//有左子树且排名小于当前节点的排名就往左子树走
-				else{//否则
-						k-=cnt[now]+sz[ch[now][0]];//排名为k的数对应的节点一定是now或其右子树
-						//相当于在其右子树中寻找排名为k-cnt[now]-sz[ch[now][0]]的数
-						if(k<=0){//说明k就是now的排名（now的排名<=cnt[now]+sz[ch[now][0]])
-								splay(now);//照常Splay
-								return val[now];//返回答案
-						}
-						else now=ch[now][1];//k不是now的权值，只能往右子树走了
-				} //右儿子一定存在，否则就没有排名为k的数了
-		}
+	int now=root;
+	while(true){
+		if(ch[now][0]&&k<=sz[ch[now][0]]) now=ch[now][0];//有左子树且排名小于当前节点的排名就往左子树走
+		else{//否则
+			k-=cnt[now]+sz[ch[now][0]];//排名为k的数对应的节点一定是now或其右子树
+			//相当于在其右子树中寻找排名为k-cnt[now]-sz[ch[now][0]]的数
+			if(k<=0){//说明k就是now的排名（now的排名<=cnt[now]+sz[ch[now][0]])
+				splay(now);//照常Splay
+				return val[now];//返回答案
+			}
+			else now=ch[now][1];//k不是now的权值，只能往右子树走了
+		} //右儿子一定存在，否则就没有排名为k的数了
+	}
 }
 ```
 ### FHQ Treap

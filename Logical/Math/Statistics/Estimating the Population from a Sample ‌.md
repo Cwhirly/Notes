@@ -15,7 +15,7 @@ $\displaystyle\int_a^bf(x)\mathrm{d}x$ 为数据在 $[a,b]$ 之间的概率。
 
 ## 频率分布直方图
 1. 分组（一般为横轴）。
-2. $\dfrac{\text{频数}}{\text{样本容量}}=\text{频率}$。
+2. $\dfrac{频数}{样本容量}=频率$。
 3. $\dfrac{\text{频率}}{\text{组距}}=\text{?}$ 
 
 

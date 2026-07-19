@@ -1,4 +1,4 @@
-与[[Continuous]]相似但完全不同
+与 [[Continuous]] 相似但完全不同
 #### 定义：
 设函数 $f(x)$ 在区间 $I$ 上有定义，若 $\forall\varepsilon>0$，$\exists\delta>0$，当 $x_1,x_2\in I$ 且 $|x_1-x_2|<\delta$ 时，有 $|f(x_1)-f(x-2)|<\varepsilon$, 则称 $f(x)$ 在 $I$ 上~={green}一致连续=~
 

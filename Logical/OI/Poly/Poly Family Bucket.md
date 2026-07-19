@@ -1,12 +1,8 @@
 ---
 前置知识: "[[Determinant]]"
 前置知识 2: "[[Mean Value Theorem]]"
+前置知识 3: "[[Combinatorical Formulas]]"
 ---
-> 
-> 这一切应该结束了……    
-> 
-
-应该是目前为止网上最全的多项式介绍了。
 # PART 1 —— 多项式基础知识
 ## Prework- $\text I$ -代数式
 这部分或许不严谨。  
@@ -102,7 +98,7 @@ $f(x)+g(x)=\displaystyle\sum_{i=0}^{\max(n,m)}(a_i+b_i)x^i$。
 $$
 c_n=\sum_{i=0}^n a_ib_{n-i}
 $$
-你也可以更加简洁地表示成：
+也可以更加直观地表示为：
 $$
 c_n=\sum_{i+j=n} a_ib_j
 $$
@@ -115,7 +111,8 @@ $$
 $$
 c_n=\sum_{i\oplus j=n} a_ib_j
 $$
-卷积是定义在数列上的运算，不过它对于多项式有一些辅助意义。    
+卷积是定义在数列上的运算，不过它对于多项式有一些辅助意义。      
+
 ### PIV-4 乘法
 $$
 \begin{aligned}
@@ -135,7 +132,7 @@ $$
 $$
 也就是，以 $a*b$ 为系数的 $n+m$ 次多项式。  
 
-至于除法，多项式经过除法之后可能就不是多项式了，所以无需讨论。    
+至于除法，多项式经过除法之后可能就不是多项式了，我们将在后文讨论。    
 ### PIV-5 复合  
 定义 $f(x)\circ g(x)$ 为 $f(g(x))$。  
 根据此进行拓展，可以定义二元多项式（二元形式幂级数）：
@@ -161,7 +158,7 @@ $$
 $$
 P(x)=A\prod_{i=1}^{\deg P(x)}(x-x_i)^{m_i}
 $$
-而 $Ax_i$ 即为 $P(x)=0$ 的复数根。  
+而 $x_i$ 即为 $P(x)=0$ 的复数根。  
 
 > [!abstract]- 证明
 >> [!note] 引理
@@ -205,7 +202,7 @@ $n+1$ 个形如此类的点对就可以唯一确定一个 $n$ 次多项式。
 
 <div STYLE="page-break-after: always;"></div>
 
-# PART 2 —— 基本多项式算法
+# PART 2 —— 多项式基础算法
 ## Basic- $\text {I}$ -离散傅里叶变换
 ### BI-1 朴素乘法
 根据多项式乘法的公式：  
@@ -232,7 +229,7 @@ $$
 \hat x_k=\sum_{i=0}^{n-1} x_i\mathrm{e}^{\mathrm{-i}\frac{2\pi ik}{n}}
 $$
 
-此时我们不妨令 $x_i$ 为 $a_i$，即系数序列，那么就有 $\hat x_k=f(\mathrm{e}^{-\mathrm{i}\frac{2\pi k}{n}})$，根据 $\mathrm e^{\mathrm i\pi}=-1$，故而 $\mathrm e^{2\mathrm i\pi}=\mathrm e^{-2\mathrm i\pi}=1$。  
+此时我们令 $x_i$ 为 $a_i$，即系数序列，那么就有 $\hat x_k=f(\mathrm{e}^{-\mathrm{i}\frac{2\pi k}{n}})$，根据 $\mathrm e^{\mathrm i\pi}=-1$，故而 $\mathrm e^{2\mathrm i\pi}=\mathrm e^{-2\mathrm i\pi}=1$。  
 那么其实那些求的值就是单位根。   
 所以离散傅里叶其实就是将多项式转成点值表示法，点集为 $n+1$ 次单位根。  
 那么，就对与每一个单位根，代入原多项式中进行求值即可。  
@@ -244,7 +241,7 @@ $$
 
 ## Basic- $\text{II}$ - 快速傅里叶变换（FFT）
 不妨记 $\omega_n^i$ 表示第 $i$ 个 $n$ 次单位根。  
-对于一个多项式   =
+对于一个多项式
 $$
 f(x)=\sum_{i=0}^{n-1}a_ix^i
 $$
@@ -374,7 +371,7 @@ $$
 ![aaa|300](https://cdn.luogu.com.cn/upload/image_hosting/8pifjwv3.png)  
 
 我们发现 NTT 对于 $p$ 的限制非常强，所以通常来说仅仅在竞赛中较为常用。  
-## Basic- $\text {VI}$ -快速沃尔什变换
+## Basic- $\text {VI}$ -位运算卷积
 ### BVI-1 位运算
 #### BVI-1-1 按位与
 按位与，又称为按位且，一般记为 $\&,\wedge$ 或 $\operatorname{and}$。  
@@ -656,7 +653,7 @@ $$
 
 ## Basic- $\text {XIII}$ -多项式开根
 注意，显然开根操作会得到两个和为 $0$ 的解，因此在实际应用中，我们通常取常数项较小的解。  
-（此处感谢 LRC 与 nueryim 学长的提醒）
+（此处感谢 LRC 与 Nueryim\_ 学长的提醒）
 ### BXIII-1 $\exp$ 法
 在解题过程中，我们常用到这一变换：$a^b=\mathrm{e}^{b\ln(a)}$。  
 根据此式，则有 $\sqrt{a}=\mathrm{e}^{\frac{\ln(a)}{2}}$。  
@@ -695,7 +692,7 @@ $$
 $$
 \begin{aligned}
 \int\frac{f'(x)}{\sqrt{1-f(x)^2}}\mathrm{d}x=\arcsin(f(x))\\
--\int\frac{f'(x)}{\sqrt{1-f(x)^2}}\mathrm{d}x=\arccos(f(x))\\
+\int\frac{-f'(x)}{\sqrt{1-f(x)^2}}\mathrm{d}x=\arccos(f(x))\\
 \int\frac{f'(x)}{1+f(x)^2}\mathrm{d}x=\arctan(f(x))\\
 \end{aligned}
 $$
@@ -704,13 +701,12 @@ $$
 这里都属于初步的反函数求导法则，不需要其他分析学技巧。  
 
 ---
-至此，前文所述都属于形式幂级数的基本内容。
+至此，前文所述都属于形式幂级数的最基本内容。
 
 <div STYLE="page-break-after: always;"></div>
 
-
-# PART 3 —— 进阶多项式算法
-## Advanced- $\text {I}$ -牛顿迭代
+# PART 3 —— 多项式相关算法
+## Algorithm- $\text {I}$ -牛顿迭代
 ### AI-1 泰勒公式
 $$
 f(x)=f (x_0)+f' (x_0)(x-x_0)+\frac{f'' (x_0)}{2!}(x-x_0)^2+\dots+\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n+o ((x-x_0)^n)
@@ -766,11 +762,10 @@ $$
 f(x)\equiv g(x)-\frac{\ln(g(x))-F(x)}{g(x)^{-1}}=g(x)(1-\ln(g(x))-F(x))\pmod{x^n}
 $$
 证明了上一章未证明的公式。  
-## Advanced- $\text {II}$ -Chirp-Z 变换
+## Algorithm- $\text {II}$ -Chirp-Z 变换
 考虑 NTT 或 DFT 的过程，都是将原多项式 $f(x)$ 转化为点值表达式，其中点值取单位根或原根的若干次幂。   
 不妨对该过程进行扩展：考虑任意一个非零数 $c$，求出 $f(c^0),f(c^1),\cdots,f(c^{m-1})$。  
 首先，有一个显然的引理：$ij=\dbinom{i+j}{2}-\dbinom{i}{2}-\dbinom{j}{2}$。   
-该引理或许在某些数学题中有一定的用途。  
 然后得到式子：  
 $$
 \begin{aligned}
@@ -790,7 +785,7 @@ $$
 \end{aligned}
 $$
 如果下标超过了定义域那直接赋 $0$，对于 $(u*v)$ 的计算使用 NTT。  
-## Advanced- $\text {III}$ -上升幂与下降幂
+## Algorithm- $\text {III}$ -上升幂与下降幂
 定义：  
 $$
 x^{\overline{n}}=\displaystyle\prod_{i=0}^{n-1}(x+i)=\frac{(x+n-1)!}{(x-1)!}
@@ -805,8 +800,9 @@ $$
 $$
 x^{\underline{-n}}=\frac{1}{(x+1)^{\overline{m}}}
 $$
-负上升幂同理。
-## Advanced- $\text {V}$ -分治乘法
+负上升幂同理。  
+下降幂有一个极好的性质，即其差分的结果与普通幂求导的结果极为相似，求和与积分亦然。这个性质在很多和式变换中可以极大地方便计算。
+## Algorithm- $\text {V}$ -分治乘法
 对于高次多项式乘低次多项式的情况下，FFT 和 NTT 或许反而不优。  
 例如，计算 $n$ 次式 $f(x)$ 乘 $1$ 次式 $(ax+b)$ 来说，做 NTT 需要 $O(n\log n)$ 次运算，但是直接计算 $axf(x)+bf(x)$ 只包含数乘以及多项式加法的开销，复杂度被降成 $O(n)$。  
 此方法只有在另一低次式的项数小于 $\log n$ 时才有效。  
@@ -821,7 +817,7 @@ $$
 ![bbb|350](https://cdn.luogu.com.cn/upload/image_hosting/8bfpxdew.png)  
 其结构与具体流程类似数据结构线段树。  
 
-## Advanced- $\text {IV}$ -多项式平移
+## Algorithm- $\text {IV}$ -多项式平移
 其实本质是形式幂级数复合的“弱化版“。  
 给定一个多项式 $f(x)=\displaystyle\sum_{i=0}^{n-1}a_ix^i$，求出多项式 $f(x+c)$ 。  
 这里只介绍最快速的方法：二项式定理法。  
@@ -842,7 +838,7 @@ $$
 \sum_{j=0}^{n-1}\frac{x^j}{j!}\sum_{x+y=n-1-j}u_{x}v_{y}
 $$
 于是我们用 NTT 计算 $(u*v)$，翻转后每一位乘上 $(j!)^{-1}$ 即为 $f(x+c)$ 的系数。  
-## Advanced- $\text {V}$ -插值  
+## Algorithm- $\text {V}$ -插值  
 在高中数学的数列一章中，我们经常需要根据某个数列的前若干项来计算其通项公式。  
 一般来说，这些数列的规律都易于观察，例如：${a_n}=\{1,3,7,13,21,31,\cdots\}$，容易观察出其通项公式为 $a_n=x^2-x+1$。    
 那么，机械化的计算机该如何解决此类问题？  
@@ -883,7 +879,8 @@ $$
 计算的复杂度为 $O(n^2)$。  
 还有另一种方法称为牛顿插值，支持 $O(n)$ 插入新点，限于篇幅，此处不过多描述。   
 除多项式插值外，还有三角插值，利用傅里叶级数进行操作，感兴趣的可以自行查阅相关资料。     
-## Advanced- $\text {VI}$ -连续点值平移
+插值在在动态规划优化方面也有相应应用。
+## Algorithm- $\text {VI}$ -连续点值平移
 给你 $f(0),f(1),f(2),\cdots,f(n-1)$ 的值，求出 $f(\delta),f(\delta+1),f(\delta+2),\cdots,f(\delta+n-1)$ 的值。  
 这里仅讨论 $\delta\ge n$ 的情况。  
 显然的做法是，先进行拉格朗日插值将 $f$ 的表达式求出来，然后对 $c,c+1,\cdots,c+n-1$ 做多点求值。  
@@ -920,7 +917,7 @@ $$
 > 预处理，即为在计算之前就进行的提前处理，如：在 NTT 之前先将从 $1\sim n$ 所有整数的阶乘根据 $n!=n(n-1)!$ 递推全部得到，这样就可以以 $O(n)$ 的时间复杂度计算 $u_i$ 和 $v_i$。
 <div STYLE="page-break-after: always;"></div>
 
-## Advanced- $\text {VII}$ -多项式多点求值
+## Algorithm- $\text {VII}$ -多项式多点求值
 
 给定 $n$ 次多项式 $f(x)$ 和 $n$ 个数 $a_1,a_2,\cdots,a_n$。  
 求出 $f(a_1),f(a_2),\cdots,f(a_n)$ 的值。
@@ -960,8 +957,8 @@ $$
 \tilde{F}(x)\tilde{D}^{-1}_{[l,r]}(x)\equiv\tilde{Q}_{[l,r]}(x)\pmod{x^{n-r+l}}\\
 \end{aligned}
 $$
-根据分治乘法，定义 $m=\frac{l+r}{2}$，此处默认为下取整。  
-由于有 $\tilde{D}_{[l,r]}(x)=\tilde{D}_{[l,m]}(x)\tilde{D}_{[m+1,r]}(x)$，所以推论有 $\tilde{D}^{-1}_{[l,m]}(x)=\tilde{D}^{-1}_{[l,r]}(x)\tilde{D}_{[m+1,r]}(x),\ \tilde{D}^{-1}_{[m+1,r]}(x)=\tilde{D}^{-1}_{[l,r]}(x)\tilde{D}_{[l,m]}(x)$。  
+根据分治乘法，定义 $m=\lfloor\frac{l+r}{2}\rfloor$。  
+由于有 $D_{[l,r]}(x)=D_{[l,m]}(x)D_{[m+1,r]}(x)$，故而 $\tilde{D}_{[l,r]}(x)=\tilde{D}_{[l,m]}(x)\tilde{D}_{[m+1,r]}(x)$，所以推论有 $\tilde{D}^{-1}_{[l,m]}(x)=\tilde{D}^{-1}_{[l,r]}(x)\tilde{D}_{[m+1,r]}(x),\ \tilde{D}^{-1}_{[m+1,r]}(x)=\tilde{D}^{-1}_{[l,r]}(x)\tilde{D}_{[l,m]}(x)$。  
 因此有：     
 $$
 \begin{aligned}
@@ -981,9 +978,8 @@ $\tilde{{D}}^{-1}$ 可以分治乘法预处理。
 复杂度没有变化，仍然是 $O(n\log^2 n)$，但每次向下递归从取模变了乘法，常数减小很多。  
 由于只有 $[x^0]Q_{[l,r]}(x)$，即 $[x^{r-l}]\tilde{Q}_{[l,r]}(x)$ 有用，又因为 $\tilde{Q}_{[l,r]}(x)$ 之后只会乘以次数小于等于 $(r−l)$ 的多项式，也就是说，只需要保留 $\tilde{Q}_{[l,r]}(x)$ ​最高的 $(r-l)$ 位即可。  
 注意，由于 $\tilde{Q}$ 是 $Q$ 取反的结果，所以保留最高的 $(r-l)$ 位后不可在低次项补 $0$，而是直接截断后 $(r-l)$ 位然后形成一个新多项式。  
-与该方法等价的是应用转置原理（即 Tellegen 定理），根据 $a_1,a_2,\cdots,a_n$ 构成的范德蒙德矩阵进行递归求解。    
-具体参考陈宇在 2020 年国家集训队论文中的《转置原理的简单介绍》。    
-## Advanced- $\text {VIII}$ -快速插值  
+与该方法等价的是应用转置原理（即 Tellegen 定理），根据 $a_1,a_2,\cdots,a_n$ 构成的范德蒙德矩阵进行递归求解，这里不做过多介绍。        
+## Algorithm- $\text {VIII}$ -快速插值  
 根据前文所述，朴素的拉格朗日插值的时间复杂度为 $O(n^2)$。  
 这里介绍一种更加快速的处理插值的算法，多项式快速插值。  
 回顾拉格朗日插值公式：  
@@ -1492,7 +1488,7 @@ $$
 $$
 [x^n]\left(\frac{a(x^2)}{u(x^2)}+x\frac{b(x^2)}{u(x^2)}\right)
 $$
-注意到前一项贡献偶数次，后一项贡献奇数次。  
+注意到前一项贡献偶数次项，后一项贡献奇数次项。  
 因此，分类讨论 $n$ 的奇偶性。  
 若 $n$ 为奇数，则 $[x^n]\left(\dfrac{a(x^2)}{u(x^2)}+x\dfrac{b(x^2)}{u(x^2)}\right)=[x^n]x\dfrac{b(x^2)}{u(x^2)}=[x^{\lfloor\frac{n}{2}\rfloor}]\dfrac{b(x)}{u(x)}$。  
 若 $n$ 为偶数，则 $[x^n]\left(\dfrac{a(x^2)}{u(x^2)}+x\dfrac{b(x^2)}{u(x^2)}\right)=[x^n]\dfrac{a(x^2)}{u(x^2)}=[x^{\frac{n}{2}}]\dfrac{a(x)}{u(x)}$。
@@ -1518,10 +1514,10 @@ $$
 所以在求解常系数齐次线性递推问题时，按上述方法构造出 $P,Q$，然后使用 Bostan-Mori 算法即可。  
 依然可以继续优化常数，有 LSB-First 算法，但是并不常用。
 ## Senior- $\text{III}$ -常系数非齐次线性递推
+### SIII-1 矩阵做法
 该方法基于 Fiduccia 算法，常数可能较大。
-若 $f$ 满足 $f_i=P(i)+\displaystyle\sum_{j=1}^dc_jf_{i-j}$，其中 $P$ 是常系数多项式，则称 $f$ 是一个**常系数非齐次线性递推数列**。  
+若 $f$ 满足 $f_i=P(i)+\displaystyle\sum_{j=1}^dc_jf_{i-j}$，其中 $P$ 是 $m$ 次常系数多项式 $\displaystyle\sum_{i=0}^m p_ix^i$，则称 $f$ 是一个**常系数非齐次线性递推数列**。  
 给定 $f_0,f_1,\cdots,f_{d-1}$, 要求出 $f_n$ 的值。
-设 $\deg{P}=m$。   
 （矩阵上方的 $\mathsf{T}$ 代表其转置后的矩阵，方便排版）
 $$
 \begin{aligned}
@@ -1594,6 +1590,26 @@ $$
 虽然 $T$ 是无穷项的形式幂级数，但是由于我们仅需要 $f_d,f_{d+1},\cdots,f_{d+m}$，所以运用多项式多点求值求出 $T$ 的前 $(d+m)$ 项即可。  
 求出 $f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m}$ 之后，算出 $x^n\bmod G$ 的系数向量再点乘 $(f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m})$ 即可。
 复杂度 $O(m\log^2m+\mathsf{M}(k)\log n)$。  
+### SIII-2 差分做法
+我们考虑前向差分算子 $\Delta$，记 $(\Delta f)(i)=f(i)-f(i-1)$，首项不变。  
+为了方便，我们去掉括号，直接记作 $\Delta f(i)$。但是要注意它是“算子”，即作用在函数本身上的，从函数到函数的映射，而非作用在某个函数值上。  
+那么由数学归纳法，容易证明 $\Delta^m f(i)=\displaystyle\sum_{j=0}^m\binom{m}{j}(-1)^jf(i-j)$。  
+所以可得出：  
+$$
+\begin{aligned}
+f_i&=P(i)+\sum_{j=1}^dc_jf_{i-j}\\
+\implies\Delta^{m+1} f_i&=\Delta^{m+1}P(i)+\sum_{j=1}^dc_j\sum_{k=0}^{m+1}\binom{m+1}{k}(-1)^kf_{i-j-k}\\
+&=\Delta^{m+1}P(i)+\sum_{j=1}^dc_j\Delta^{m+1}f_{i-j}
+\end{aligned}
+$$
+然后，注意到对于多项式 $P(x)=\displaystyle\sum_{i=0}^m p_ix^i$ 来说，$\Delta P(x)=\displaystyle\sum_{i=0}^m p_ix^i-\displaystyle\sum_{i=0}^m p_i\sum_{j=0}^i\binom{i}{j}x^j(-1)^{i-j}$，发现 $x^m$ 项被抵消了，因此差分之后得到一个 $(m-1)$ 次多项式。  
+因此，根据数学归纳法，$\Delta^{m+1}P(i)=0$。  
+所以可以得到：
+$$
+\Delta^{m+1}f_i=\sum_{j=1}^dc_j\Delta^{m+1}f_{i-j}
+$$
+惊人的结果，这是一个齐次递推式。  
+因此      
 ## Senior- $\text {IV}$ -多项式复合
 多项式复合，本质上是**形式幂级数复合截断**，即求出 $f(g(x))$ 的前 $n$ 项，即 $\displaystyle\sum_{i=0}^n([x^i]f(x))g(x)^i\bmod(x^{n+1})$。   
 ### SIV-2 Kinoshita–Li 算法
@@ -1628,6 +1644,7 @@ $n!$，即 $n^{\underline{n}}$，当 $n$ 为正整数时定义为 $\displaystyle
 不妨定义 $f(x)=\displaystyle\prod_{j=1}^{\Delta}(i\Delta+j)$，答案就是 $\displaystyle\prod_{i=0}^{k-1}f(i\Delta)\times\displaystyle\prod_{i=k\Delta+1}^ni$。  
 #### SIV-1-1 多点求值
 $f(x)$ 使用分治乘法得到系数，考虑直接多点求值计算出 $f(0),f(\Delta),f(2\Delta),\cdots,f((k-1)\Delta)$，直接相乘，最后的散块暴力乘起来，复杂度 $O(\Delta\log^2\Delta+\max(k,\Delta)\log^2(\max(k,\Delta))+\Delta)$，显然当 $\Delta=\lfloor\sqrt{n}\rfloor$ 时复杂度最优为 $O(\sqrt{n}\log^2\sqrt{n})$，这等价于 $O(\sqrt{n}\log^2n)$，因为 $\log\sqrt{n}=\frac{1}{2}\log n$。
+
 <div STYLE="page-break-after: always;"></div>
 
 
@@ -1638,6 +1655,25 @@ $f(x)$ 使用分治乘法得到系数，考虑直接多点求值计算出 $f(0),
 陈宇《转置原理的简单介绍》
 吕凯风《集合幂级数的性质与应用及其快速算法》  
 [OI-wiki](https://oi-wiki.org) “多项式与生成函数”部分
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

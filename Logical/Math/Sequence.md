@@ -1,3 +1,5 @@
+[[Poly Family Bucket]]
+
 ### 等差数列
 本质是直线。
 $a_n=(m-n)d+a_m=(n-1)d+a_1$。  
@@ -14,5 +16,8 @@ $a_{n+1}=\dfrac{5a_n-1}{a_n+3}$，$a_{n+1}-\lambda=\dfrac{5(a_n-\lambda)}{a_n+3}
 $b_n=a_n-1,b_{n+1}=\dfrac{4b_n}{b_n+4}\Rightarrow\dfrac{1}{b_n+1}=\dfrac{1}{4}+\dfrac{1}{b_n}$.  
 
 
+$$
+{n\brace m} {n\brack m}\begin{pmatrix}n\\m\end{pmatrix}
+$$
 
-13109535239
+1310953523

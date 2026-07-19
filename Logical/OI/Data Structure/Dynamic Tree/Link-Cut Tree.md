@@ -184,7 +184,7 @@ Access，作为名词是通道；(使用或见到的)机会，权利；通路；
 我们要将 $N$ 到 $A$ 进行 `access`，辅助树上的操作就如下图所示。
 ![[Pasted image 20250819113728.png]]
 最后原树变成这样：
-![[Pasted image 20250820090411.png]]
+![[Pasted image 20250820090411.png|224]]
 说得复杂，代码很短。
 ```cpp
 inline int access(int x){
@@ -509,28 +509,5 @@ signed main()
 }
 ```
 
-常熟比较小，可以通过模板。
+常数比较小，可以通过模板。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$$
-dp_k=n^{\underline{k}}2^{n-k}+\sum_{i=0}^n(i^{k}-i^{\underline{k}})\binom{n}{i}
-$$

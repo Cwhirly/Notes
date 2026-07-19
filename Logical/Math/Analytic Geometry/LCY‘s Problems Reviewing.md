@@ -2,13 +2,11 @@
 前置知识: "[[Ellipse]]"
 前置知识 2: "[[Hyperbola]]"
 ---
+
 我们承认选择公理。（？
 
 退役之后应该就跟它过了。 
-## Week-2 Weekend Homework T3
-**From:** 
-LCY
-
+## Analytic Geometry Week-2 Weekend Homework T3
 **Problem:** 
 已知椭圆 $E:\frac{x^2}{t}+\frac{y^2}{3}=1$ 焦点在 $x$ 轴上，点 $A$ 是 $E$ 左顶点，斜率为 $k>0$ 的直线交 $E$ 于 $A,M$ 两点，点 $N$ 在 $E$ 上，且满足 $MA\perp NA$.  
 1. 当 $t=4$ 且 $|AM|=|AN|$ 时，求 $S_{\triangle AMN}$.  
@@ -45,14 +43,11 @@ $$
 想了半天，发现了关键。  
 其实上式本身就是一个 $r,t$ 的关系式罢了，所以其实在某种意义上是对称的，所以设自变量 $t$ 为主元其实也未尝不可。  
 然后原式就变成了一次式。
-直接解即可。 
+直接解即可。 未命名
 
 这个题最关键的一步就是变换主元，其实有一点巧妙，算是积累了一个方法。
 
-## Week-2 Weekend Homework T4
-**From:** 
-Unknown
-
+## Analytic Geometry Week-2 Weekend Homework T4
 **Problem:** 
 已知椭圆 $C:\frac{x^2}{a^2}+\frac{y^2}{b^2}=1$ 的左右焦点为 $F_1,F_2$，过 $F_2$ 的直线交 $C$ 于 $P,Q(y_P>0)$，$C_{\triangle F_1PQ}=8,e=\frac{\sqrt{2}}{2}$ 
 1. 求 $C$ 的方程. 
@@ -84,3 +79,32 @@ Unknown
 （2.2）
 第二问其实开拓得不多。  
 直接算，暴力求导求最值，思维难度低，但是计算量令人作呕。
+
+## Weekly Test-1 T1
+**Problem:**  
+已知函数 $f(x)=\ln x-a\sqrt{x+1}+4$。  
+1. 当 $a=\sqrt{3}$ 时，求 $f(x)$ 的单调区间；  
+2. 若 $f(x)$ 有两个零点，
+	1) 求 $a$ 的取值范围；
+	2) 证明：$f(x)<\frac{2}{\sqrt{a^2+1}-1}$。  
+
+**Solution&Mind:**  
+(1)  
+直接列式子 $f'(x)=\frac{2\sqrt{x+1}-ax}{2x\sqrt{x+1}}>0$。  
+把 $a$ 带进去，解得 $x\in(0,2)$ 时单增，$x\in(2,+\infty)$ 时单降。
+(2.1)
+首先 $a<0$ 时 $f$ 单增，不可能有两个零点。
+所以我们仅仅考虑 $a>0$ 情况。
+由于 $\displaystyle\lim_{x\to 0^+}f(x)=-\infty,\displaystyle\lim_{x\to +\infty}f(x)=-\infty$，同时 $f$ 先单增后单降，因此我们设 $x_0$ 为 $f$ 的极值点。  
+由于 $f$ 连续，根据介值定理，若 $f(x_0)>0$ 则 $x_0$ 左右的曲线都必然过 $x$ 轴。即为两个零点。  
+$f(x_0)=\ln x_0-a\sqrt{x_0+1}+4>0$
+$f'(x_0)=\frac{2\sqrt{x_0+1}-ax_0}{2x_0\sqrt{x_0+1}}=0\implies a=\frac{2}{x_0}\sqrt{x_0+1}=2\sqrt{\frac{1}{x_0}+\frac{1}{x_0^2}}$。  
+$f(x_0)=\ln x_0-\frac{2x_0+2}{x_0}+4=\ln x_0-\frac{2}{x_0}+2>0$
+发现这个式子单增，解得 $x_0>1$。带回原式，有 $a\in(0,2\sqrt{2})$。  
+(2.2)  
+发现 $\mathrm{RHS}=x_0$。    
+因为 $x_0$ 是极值点，所以 $f(x)<x_0\implies f(x_0)<x_0$。  
+即证 $\ln x_0-\frac{2}{x_0}+2-x_0<0$。  
+求导得 $\frac{1}{x_0}+\frac{2}{x_0^2}-1=0$，  
+$x_0^2-x_0-2=0$ 舍去负根 $x_0=2$，带回则为 $\ln 2-1<0$。  
+得证。
