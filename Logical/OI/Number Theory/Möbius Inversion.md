@@ -38,8 +38,8 @@ $$
 &=\sum_{x=1}^n\sum_{y=1}^m\sum_{d|x,d|y}\mu(d)\lfloor\frac n x\rfloor\lfloor\frac m y\rfloor\\
 &=\sum_{d=1}^{\min(n,m)}\mu(d)\sum_{x=1}^{\lfloor\frac n d\rfloor}d\sum_{y=1}^{\lfloor\frac m d\rfloor}d\lfloor\frac {n} {dx}\rfloor\lfloor\frac m {dy}\rfloor\\
 &=\sum_{d=1}^{\min(n,m)}\mu(d)d^2\sum_{x=1}^{\lfloor\frac n d\rfloor}\lfloor\frac {n} {dx}\rfloor\sum_{y=1}^{\lfloor\frac m d\rfloor}\lfloor\frac {m} {dy}\rfloor\\
-&=\sum_{d=1}^{\min(n,m)}\nu(d)\Psi(\lfloor\frac n d\rfloor)\Psi(\lfloor\frac m d\rfloor)\\
-\nu(n)&=\mu(n),\Psi(n)=\sum_{i=1}^ni\lfloor \frac n i\rfloor
+&=\sum_{d=1}^{\min(n,m)}\mu(d)\Psi(\lfloor\frac n d\rfloor)\Psi(\lfloor\frac m d\rfloor)\\
+&\Psi(n)=\sum_{i=1}^ni\lfloor \frac n i\rfloor
 \end{aligned}
 $$
 Now we can use integer division partition to solve this problem with the time complexity of $O(n\sqrt n+T\sqrt n)$。
@@ -125,7 +125,8 @@ $$\prod_{1\le i,j \le k}(q_j-q_i)$$
 
 范德蒙德矩阵逆并无简单形式，不过可以使用 FFT 快速计算。（哈哈，不会）
 
-我们得到的多项式方程 $q^k-\sum_{j=1}^{k}a_{j}q^{k-j}=0$ 被称作**特征方程**，其 $k$ 个根 $q_1,q_2,\dots,q_k$ 被称为**特征根**，数列 $h_n$ 的递推关系被称作**常系数线性递推关系**。
+我们得到的多项式方程 $q^k-\sum_{j=1}^{k}a_{j}q^{k-j}=0$ 被称作**特征方程**，其 $k$ 个根 $q_1,q_2,\dots,q_k$
+被称为**特征根**，数列 $h_n$ 的递推关系被称作**常系数线性递推关系**。
 
 这就够用了，稍加改进，它便完全能解决常系数齐次线性递推了（假设你会解高次方程）。
 
@@ -162,3 +163,17 @@ $$F(z)=\dfrac{1}{\sqrt 5}\left(\dfrac{1}{1-\phi z}-\dfrac{1}{1-\hat\phi z}\right
 现在，我们来考查一下常系数线性递推数列的生成函数。省略若干细节，我们总能得到生成函数 $F(z)=\dfrac{P(z)}{Q(z)}+R(z)$，$P(z),Q(z),R(z)$ 都是整式，且 $P(z)$ 的次数小于 $Q(z)$ 的次数。
 
 ## 3. 无重根的有理展开定理
+
+
+
+$$
+\begin{aligned}
+&=\sum_{i=1}^a\sum_{j=1}^b\sum_{k=1}^c\sigma_0(ijk)\\
+&=\sum_{i=1}^a\sum_{j=1}^b\sum_{k=1}^c\sum_{x|i}\sum_{y|jk}\varepsilon(\gcd(x,y))\\
+&=\sum_{i=1}^a\sum_{j=1}^b\sum_{k=1}^c\sum_{x|i}\sum_{y|jk}\sum_{d|x,d|y}\mu(d)\\
+&=\sum_{x=1}^a\sum_{i=1}^{\lfloor\frac{a}{x}\rfloor}\sum_{j=1}^b\sum_{k=1}^c\sum_{y|jk}\sum_{d|x,d|y}\mu(d)\\
+&=\sum_{x=1}^a\sum_{j=1}^b\sum_{k=1}^c\sum_{y|jk}\sum_{d|x,d|y}\mu(d)\lfloor\frac{a}{x}\rfloor\\
+&=\sum_{j=1}^b\sum_{k=1}^c\sum_{y|jk}\sum_{d|y}\mu(d)\sum_{x=1}^{\lfloor\frac{a}{d}\rfloor}\lfloor\frac{a}{xd}\rfloor\\
+&=\sum_{j=1}^b\sum_{k=1}^c\sum_{d|jk}\mu(d)\sigma_0(\frac{jk}{d})\sum_{x=1}^{\lfloor\frac{a}{d}\rfloor}\lfloor\frac{a}{xd}\rfloor\\
+\end{aligned}
+$$

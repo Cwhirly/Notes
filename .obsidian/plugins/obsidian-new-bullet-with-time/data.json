@@ -1,0 +1,8 @@
+{
+  "timeFormat": "HH:mm:ss",
+  "timePrefixFormat": "",
+  "timeSuffixFormat": "",
+  "regexForTime": "\\d{2}:\\d{2}",
+  "timeZone": "Asia/Shanghai",
+  "respectDaylightSavings": true
+}

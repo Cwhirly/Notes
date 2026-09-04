@@ -1,8 +1,12 @@
 {
   "baseFontSize": 18,
-  "textFontFamily": "霞鹜文楷,Scheherazade New,唐兀银川",
+  "textFontFamily": "霞鹜文楷,Scheherazade New,唐兀银川,霞鹜臻楷 GB",
   "theme": "obsidian",
-  "monospaceFontFamily": "Maple Mono Normal NL NF CN",
-  "accentColor": "",
-  "interfaceFontFamily": "霞鹜文楷,Arial Black"
+  "monospaceFontFamily": "Consolas",
+  "accentColor": "#236baf",
+  "interfaceFontFamily": "霞鹜文楷,Scheherazade New,唐兀银川,霞鹜臻楷 GB",
+  "baseFontSizeAction": false,
+  "enabledCssSnippets": [
+    "bold-fix"
+  ]
 }

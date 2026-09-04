@@ -1,0 +1,11 @@
+{
+  "imageUrl": "",
+  "darkImageUrl": "https://cdn.luogu.com.cn/upload/image_hosting/5tj4dsci.png",
+  "opacity": 0.1,
+  "bluriness": "0px",
+  "inputContrast": false,
+  "position": "center",
+  "size": "cover",
+  "wholeWindow": false,
+  "excludedPaths": ""
+}

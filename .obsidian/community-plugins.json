@@ -2,12 +2,13 @@
   "obsidian-excalidraw-plugin",
   "obsidian-autocomplete-plugin",
   "table-editor-obsidian",
+  "obsidian-mind-map",
   "easy-typing-obsidian",
   "vscode-editor",
-  "obsidian-dynamic-background",
   "execute-code",
   "obsidian-linter",
-  "pkmer",
+  "obsidian-hider",
   "fast-text-color",
-  "obsidian-mind-map"
+  "background-image",
+  "obsidian-new-bullet-with-time"
 ]

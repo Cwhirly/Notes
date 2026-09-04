@@ -1,54 +1,69 @@
 {
   "main": {
-    "id": "679ba152592ca8f2",
+    "id": "2baaf604e1f9aa24",
     "type": "split",
     "children": [
       {
-        "id": "7ac9b05e823707d3",
+        "id": "a23d4e2d7a08d9c8",
         "type": "tabs",
         "children": [
           {
-            "id": "d2c5f82489e2d11e",
+            "id": "a67bdf750dd07fe9",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/公切线.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "公切线"
+            }
+          },
+          {
+            "id": "879a481360424531",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Logical/Math/Mathematical Analysis/Derivative/Mean Value Theorem.md",
+                "file": "Logical/OI/Combinatorics/Combinatorical Formulas.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Mean Value Theorem"
+              "title": "Combinatorical Formulas"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
   },
   "left": {
-    "id": "508855e95dc8bcf4",
+    "id": "cfd1a207a6272430",
     "type": "split",
     "children": [
       {
-        "id": "1a555c18eba8234f",
+        "id": "47866a3bdc254489",
         "type": "tabs",
         "children": [
           {
-            "id": "8a5f0ccff72c6f5f",
+            "id": "c7b085c7108a882e",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "文件列表"
             }
           },
           {
-            "id": "3604fc435d0086db",
+            "id": "cee3ed0522804cec",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +80,7 @@
             }
           },
           {
-            "id": "75e455ddcd885ae4",
+            "id": "d96bbd5960cf7276",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -78,22 +93,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 248.95703125
   },
   "right": {
-    "id": "466be9225fd7d293",
+    "id": "7fdb2199757185b8",
     "type": "split",
     "children": [
       {
-        "id": "e8cdeac0d1cbdb37",
+        "id": "8bf2cbd58496d6be",
         "type": "tabs",
         "children": [
           {
-            "id": "ea2b6f3b5510f9b5",
+            "id": "4bada4627f2d4dd1",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Essay/7+2=9.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,24 +119,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "反向链接"
+              "title": "7+2=9 的反向链接列表"
             }
           },
           {
-            "id": "fcb53fa1a7adaff1",
+            "id": "8d13234bfc314934",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Ergsgasdofi cb asdg gr ssgiedbvri.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "出链"
+              "title": "Ergsgasdofi cb asdg gr ssgiedbvri 的出链列表"
             }
           },
           {
-            "id": "68d0d310b2bff4c0",
+            "id": "a717eb053bde5725",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -135,20 +152,48 @@
             }
           },
           {
-            "id": "87143fd1253ab89f",
+            "id": "7aef267bc88b36f7",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
+                "file": "Auxiliary/文章分析.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "文章分析 的大纲"
+            }
+          },
+          {
+            "id": "ff3a0008d37ab44b",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "Literature/春.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "脚注"
+            }
+          },
+          {
+            "id": "58d7627d23738f6a",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -157,51 +202,71 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "vscode-editor:新建代码文件": false,
+      "bases:新建数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "bases:新建数据库": false,
-      "obsidian-excalidraw-plugin:新建绘图文件": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "vscode-editor:新建代码文件": false,
-      "pkmer:Open Pkmer Market": false
+      "workspaces:管理工作区布局": false,
+      "audio-recorder:开始/结束录音": false,
+      "zk-prefixer:创建时间戳笔记": false
     }
   },
-  "active": "d2c5f82489e2d11e",
+  "active": "879a481360424531",
   "lastOpenFiles": [
-    "Editorial/题解.md",
-    "Editorial/ThetaOI Round-3.md",
-    "Editorial/ThetaOI Round-2.md",
-    "Editorial/ThetaOI Round-1.md",
-    "Editorial/ThetaOI Round-1 Editorial.md",
-    "Editorial/Contest For Sci_qud Only.md",
-    "Editorial/CWHOL 2026 Editorial.md",
-    "Editorial/CWHOC Round-1 Editorial.md",
-    "Editorial/CHWOC Day2 Editorial.md",
-    "Editorial/CF.md",
-    "Editorial",
-    "Logical/Math/Mathematical Analysis/Derivative/Derivative and Differential.md",
+    "Logical/Math/Sequence.md",
+    "Logical/OI/Data Structure/Dynamic Tree/Link-Cut Tree.md",
+    "Problem&Contest Record/Week Homework.md",
+    "Schoolwork/Chemistry/Points.md",
+    "Schoolwork/Chemistry/Solubility.md",
+    "Schoolwork/English/AltGr.md",
+    "Schoolwork/English/Present Perfect.md",
+    "Schoolwork/English/The Last Speech.md",
+    "Schoolwork/English/U8 Writing.md",
+    "Schoolwork/Others/How to Write Papers (?.md",
+    "Schoolwork/Physic/Projectile Motion.md",
+    "Schoolwork/Physic/ZCH's Note.md",
+    "Logical/Math/Analytic Geometry/Hyperbola.md",
+    "Logical/Math/Analytic Geometry/Ellipse.md",
+    "Logical/OI/Data Structure/Dynamic Tree/Top Tree.md",
     "Excalidraw/公切线.md",
-    "Pasted Image 20260718172423_923.png",
-    "IMG_0334..JPG",
-    "截图 2025-12-02 18-03-06.png",
-    "Pasted Image 20260718171813_342.png",
-    "Pasted Image 20260717120145_724.png",
-    "Pasted Image 20260717120136_421.png",
-    "Excalidraw/WHKOI Round-1 题解.md",
-    "Pasted Image 20260714145135_622.png",
-    "Pasted Image 20260714145119_782.png",
-    "b_8edb4e9a2ab91f96496184d57905b95f.jpg",
-    "Logical/Math/Analytic Geometry/LCY‘s Problems Reviewing.md",
-    "u=2997420950,684138767&fm=253&fmt=auto&app=138&f=JPEG.webp",
-    "Logical/Math/Mathematical Analysis/Derivative/L'Hospital Rule.md",
-    "未命名.md",
-    "Logical/Math/Mathematical Analysis/Derivative/Derivative For High School.md",
-    "Excalidraw/Red Edges.md",
-    "Excalidraw/Drawing 2026-03-18 18.38.37.excalidraw.md",
-    "Excalidraw/Drawing 2025-04-06 21.53.33.excalidraw.md"
+    "Pasted image 20260828195258.png",
+    "Pasted image 20260828185114.png",
+    "Pasted image 20260828183320.png",
+    "Pasted Image 20260827212653_441.png",
+    "Excalidraw/Drawing 2026-08-25 17.07.37.excalidraw.md",
+    "Pasted Image 20260825171001_562.png",
+    "Pasted image 20260825161130.png",
+    "Logical/Math/Mathematical Analysis/Limits/Function Limit.md",
+    "Logical/Math/Mathematical Analysis/Other/Stick Flipping.md",
+    "Logical/Math/Mathematical Analysis/Other/Vector.md",
+    "Logical/Math/Mathematical Analysis/Other/Triangle Basic Formulas.md",
+    "Logical/Math/Mathematical Analysis/Other/Orders of Infinitesimals.md",
+    "Logical/Math/Mathematical Analysis/Limits/Uniform Continuity.md",
+    "Logical/Math/Mathematical Analysis/Limits/Stolz Theorem.md",
+    "Logical/Math/Mathematical Analysis/Limits/Continuous.md",
+    "Logical/Math/Mathematical Analysis/Integral/Indefinite Integral.md",
+    "Pasted image 20260825110829.png",
+    "Pasted image 20260825110744.png",
+    "Pasted Image 20260825110452_821.png",
+    "o.png",
+    "Schoolwork/History/History Note IV.canvas",
+    "logseq/custom.css",
+    "pages",
+    "logseq/config.edn",
+    "journals",
+    "logseq",
+    "Schoolwork/History/History Notes.canvas",
+    "Schoolwork/History/History Notes II.canvas",
+    "Language/IPA.pdf",
+    "DataDelete.odt",
+    "Recording 20260523115257.m4a",
+    "Tutorial/Interactive IPA Chart in English.html",
+    "Images"
   ]
 }

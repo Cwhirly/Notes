@@ -513,7 +513,7 @@ $$
 
 ### BVII-3 多项式求逆
 给定一个 $n$ 次多项式 $f(x)$，试求出 $g(x)$，使得 $f(x)g(x)\equiv 1 \pmod {x^n}$。  
-首先我们得求出 $h(x)$ ，满足 $f(x)h(x)\equiv 1\pmod{x^{\lceil\frac{n}{2}\rceil}}$  
+首先我们可以求出 $h(x)$ ，满足 $f(x)h(x)\equiv 1\pmod{x^{\lceil\frac{n}{2}\rceil}}$  
 很明显因为 $f(x)g(x)\equiv 1 \pmod {x^n}$，所以 $\forall m\le n,f(x)g(x)\equiv 1 \pmod {x^m}$ 。  
 所以 
 $$
@@ -590,18 +590,19 @@ $$
 > 
 
 如果将多项式仍看作与多项式函数等价，那么可能会有不连续或不可导的情况，甚至 $\mathbb{R}$ 上的很多性质都无法满足，但是对于一个普通的多项式，也即一个形式幂级数，我们无需考虑**函数值**的连续性、可导性甚至是敛散性，直接做形式上的导数即可。  
-可以得到：  
+相当于下式本质上是一个恰好与多项式导数计算法则一致的人为定义：  
 $$
 \frac{\mathrm d}{\mathrm dx}\sum_{i=0}^{n}a_ix^i=\sum_{i=1}^{n}ia_ix^{i-1}
 $$
 ## Basic- $\text {IX}$ -形式不定积分
-我们通常忽略积分结果中的常数项 $C$。
-则有：
+此处我们忽略积分结果中的常数项 $C$。
+则亦可定义：
 $$
 \int\sum_{i=0}^{n}a_ix^i\mathrm dx=\sum_{i=1}^{n}\frac{a_i}{i}x^i
 $$
 ## Basic- $\text {XI}$ -指数运算
 ### BXI-1 多项式自然对数
+定义 $\ln(f(x))=\sum_{i\ge0}\frac{f(x)^i}{i}$
 如果我们要求 $\ln(f(x))\bmod x^n$ ，可以用如下方式处理。
 根据公式：
 $$
@@ -627,7 +628,7 @@ $$
 注意，虽然形式幂级数是一个形式符号，不考虑其敛散性，但其常数项依然是一个数域中的元素。  
 所以 $f(x)$ 的常数项需要为 $0$。  
 此时取的 $x^n$ 中 $n$ 越大，最终实现的效果越精细，但不会达到最终答案，因为最终答案 $\mathrm{e}^{f(x)}=\displaystyle\sum_{i\ge 0}\dfrac{f(x)^i}{i!}$ 是一个无穷项的形式幂级数。  
-关于这方面的拓展知识涉及到 $p$ 进数，域论等相关知识，感兴趣的不妨阅读 Elegia 的 [《无理数取模怎么做?》](https://www.luogu.me/article/mpgzgle2)  。
+关于这方面的拓展知识涉及到一些有趣的问题，感兴趣的不妨阅读 Elegia 的 [《无理数取模怎么做?》](https://www.luogu.me/article/mpgzgle2)  。
 此处先给出关于多项式 $\exp$ 的常用的计算公式：  
 设 $E(x)=\exp(f(x))\bmod x^n,E'(x)=\exp(f(x))\bmod \lceil\dfrac{x^n}{2}\rceil$ ，那么有：
 $$
@@ -1466,7 +1467,7 @@ $$
 所以有 $\displaystyle\sum_{i=1}^d\psi_ix^{i-1}=x^n\bmod (x^d-\displaystyle\sum_{i=0}^{d-1}x^ic^{d-i})$。  
 再快速幂的过程中不断进行多项式取模即可算出 $\psi$，然后与 $f_0,f_1,\cdots,f_{d-1}$ 分别相乘（或者是说“内积“）并求和即可。  
 复杂度为 $O(d\log d\log n)$。  
-实际上这类多项式相关的算法的复杂度应当准确表示成：$O(\mathsf{M}(d)\log n)$,，其中 $\mathsf{M}(d)$ 是多项式乘法的复杂度（注意是无衬线体）。  
+实际上这类多项式相关的算法的复杂度应当准确表示成：$O(\mathsf{M}(d)\log n)$,，其中 $\mathsf{M}(d)$ 是多项式乘法的复杂度。  
 ### SII-3 Bostan-Mori 算法  
 一个较新的算法，由 Alin Bostan 和 Ryuhei Mori 提出。 
 用该算法解决常系数齐次线性递推问题，复杂度仍然是 $O(\mathsf{M}(d)\log n)$，但是常数更小，且更容易理解。
@@ -1587,7 +1588,7 @@ $$
 不妨设 $\chi(x)=\displaystyle\sum_{i=0}^{\infty}c_i,T(x)=\displaystyle\sum_{i=0}^{\infty}\tau_i,F(x)=\displaystyle\sum_{i=0}^{\infty}f_i$。  
 注意到 $\displaystyle\sum_{j=1}^ic_jf_{i-j}=[x^i](\chi\times F)$。  
 因此我们有 $F=T+\chi F$，即 $F=\dfrac{T}{1-\chi}$。  
-虽然 $T$ 是无穷项的形式幂级数，但是由于我们仅需要 $f_d,f_{d+1},\cdots,f_{d+m}$，所以运用多项式多点求值求出 $T$ 的前 $(d+m)$ 项即可。  
+虽然 $T$ 是无穷项的形式幂级数，但是由于我们仅需要 $f_d,f_{d+1},\cdots,f_{d+m}$，所以多点求值求出 $T$ 的前 $(d+m)$ 项即可。  
 求出 $f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m}$ 之后，算出 $x^n\bmod G$ 的系数向量再点乘 $(f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m})$ 即可。
 复杂度 $O(m\log^2m+\mathsf{M}(k)\log n)$。  
 ### SIII-2 差分做法
@@ -1655,31 +1656,3 @@ $f(x)$ 使用分治乘法得到系数，考虑直接多点求值计算出 $f(0),
 陈宇《转置原理的简单介绍》
 吕凯风《集合幂级数的性质与应用及其快速算法》  
 [OI-wiki](https://oi-wiki.org) “多项式与生成函数”部分
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

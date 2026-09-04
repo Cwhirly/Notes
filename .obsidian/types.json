@@ -10,7 +10,6 @@
     "excalidraw-export-padding": "number",
     "excalidraw-export-pngscale": "number",
     "excalidraw-export-embed-scene": "checkbox",
-    "excalidraw-export-internal-links": "checkbox",
     "excalidraw-link-prefix": "text",
     "excalidraw-url-prefix": "text",
     "excalidraw-link-brackets": "checkbox",
