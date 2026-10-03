@@ -5,10 +5,11 @@
   "obsidian-mind-map",
   "easy-typing-obsidian",
   "vscode-editor",
-  "execute-code",
   "obsidian-linter",
   "obsidian-hider",
   "fast-text-color",
   "background-image",
-  "obsidian-new-bullet-with-time"
+  "obsidian-new-bullet-with-time",
+  "codeblock-customizer",
+  "luogu-markdown"
 ]

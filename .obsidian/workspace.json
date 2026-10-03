@@ -6,7 +6,6 @@
       {
         "id": "a23d4e2d7a08d9c8",
         "type": "tabs",
-        "dimension": 75.50744248985114,
         "children": [
           {
             "id": "879a481360424531",
@@ -14,37 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OI/Data Structure/Dynamic Tree/Top Tree.md",
+                "file": "OI/Number Theory/Number Theory Fml Bucket.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Top Tree"
-            },
-            "group": "abe42d38f68ebcd7"
-          }
-        ]
-      },
-      {
-        "id": "59b6873ce8612f0e",
-        "type": "tabs",
-        "dimension": 24.49255751014885,
-        "children": [
-          {
-            "id": "8372e9d599095248",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "OI/Data Structure/Dynamic Tree/Top Tree.md",
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-list",
-              "title": "Top Tree 的大纲"
-            },
-            "group": "abe42d38f68ebcd7"
+              "title": "Number Theory Fml Bucket"
+            }
           }
         ]
       }
@@ -105,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 248.95703125,
-    "collapsed": true
+    "width": 248.95703125
   },
   "right": {
     "id": "7fdb2199757185b8",
@@ -230,29 +204,37 @@
       "zk-prefixer:创建时间戳笔记": false
     }
   },
-  "active": "8372e9d599095248",
+  "active": "879a481360424531",
   "lastOpenFiles": [
-    "Pasted image 20260915170229.png",
-    "Pasted image 20260915165050.png",
-    "Pasted image 20260915160105.png",
-    "OI/Data Structure/Dynamic Tree/Link-Cut Tree.md",
-    "OI/Data Structure/Dynamic Tree/Top Tree.md",
-    "Pasted image 20260914215033.png",
-    "OI/Data Structure/Balanced Tree/FHQ & Splay.md",
-    "OI/Data Structure/Segment Tree/Binary Indexed Tree.md",
-    "Pasted image 20260911213953.png",
-    "Pasted image 20260911205330.png",
-    "Pasted image 20260911174206.png",
-    "Pasted image 20260904222342.png",
-    "Pasted image 20260904221625.png",
-    "OI/Dynamic Programming/Tree DP.md",
+    "Pasted image 20261003183126.png",
+    "Pasted image 20261003182714.png",
+    "Pasted image 20261003165024.png",
+    "Pasted image 20261003164857.png",
     "Math/Statistics/Estimating the Population from a Sample ‌.md",
-    "OI/String/Simple String/Hash.md",
-    "OI/Number Theory/Möbius Inversion.md",
+    "Math/Mathematical Analysis/Other/Triangle Basic Formulas.md",
     "OI/Number Theory/Extended Eratosthenes Sieve.md",
+    "OI/Poly/Poly Family Bucket.md",
+    "OI/Number Theory/Number Theory Fml Bucket.md",
+    "Pasted image 20261003154808.png",
+    "Pasted image 20261003152214.png",
+    "Pasted image 20261003152118.png",
+    "Pasted image 20261002202119.png",
+    "Pasted image 20261002201519.png",
+    "Pasted image 20261002201417.png",
+    "Pasted image 20261002200553.png",
+    "OI/Number Theory/Möbius Inversion.md",
+    "OI/Data Structure/Dynamic Tree/Top Tree 仙人掌.md",
+    "OI/Data Structure/Dynamic Tree/Top Tree.md",
+    "OI/Poly/Poly Family Bucket (English Version).md",
+    "OI/Poly/Polyboard-Code Updating Record.md",
+    "OI/Data Structure/Balanced Tree/FHQ & Splay.md",
+    "OI/Combinatorics/Combinatorical Formulas.md",
+    "OI/Data Structure/Dynamic Tree/Link-Cut Tree.md",
+    "OI/Data Structure/Segment Tree/Binary Indexed Tree.md",
+    "OI/Dynamic Programming/Tree DP.md",
+    "OI/String/Simple String/Hash.md",
     "Math/Mathematical Analysis/Derivative/Derivative For High School.md",
     "OI/String/Prefix Structure/Knuth-Morris-Pratt.md",
-    "Pasted image 20260828195258.png",
     "Pasted image 20260828195258.png.md",
     "Math/Analytic Geometry/LCY‘s Problems Reviewing.md",
     "Math/Mathematical Analysis/Other/Sequence.md",
@@ -260,13 +242,6 @@
     "Math/Sequence.md",
     "Math/Lrc 7.1.md",
     "Math/Analytic Geometry/Circle.md",
-    "公切线.md",
-    "Math/Mathematical Analysis/Other/Vector.md",
-    "OI/String/Suffix Structure/Suffix Balanced Tree.md",
-    "Pasted image 20260410201349.png.md",
-    "未命名.md",
-    "OI/String/Prefix Structure/Aho-Corasick Automaton.md",
-    "OI/Graph Theory/Tree Theory/Heavy Path Decomposition.md",
     "OI/Data Structure/Segment Tree/Chairman Tree.docx",
     "OI/String/Suffix Structure",
     "OI/String/Simple String",
@@ -277,7 +252,6 @@
     "OI/Number Theory/Extended Eratosthenes Sieve.html",
     "OI/Number Theory/Extended Eratosthenes Sieve.aux",
     "OI/Graph Theory/Tree Theory",
-    "Other/aa.png",
     "Schoolwork/History/History Note IV.canvas",
     "Schoolwork/History/History Notes.canvas",
     "Schoolwork/History/History Notes II.canvas"

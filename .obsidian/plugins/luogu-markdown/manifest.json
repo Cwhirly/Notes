@@ -1,0 +1,9 @@
+{
+	"id": "luogu-markdown",
+	"name": "Luogu Markdown",
+	"version": "0.1.0",
+	"minAppVersion": "1.4.0",
+	"description": "Render Luogu flavored Markdown in Obsidian.",
+	"author": "Revitalize",
+	"isDesktopOnly": false
+}

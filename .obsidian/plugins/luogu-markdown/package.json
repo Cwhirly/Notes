@@ -1,0 +1,26 @@
+{
+	"name": "obsidian-luogu-markdown",
+	"version": "0.1.0",
+	"description": "Render Luogu flavored Markdown in Obsidian.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"test": "esbuild test/all.test.ts --bundle --platform=node --format=cjs --alias:obsidian=./test/stubs/obsidian.ts --outfile=test/.tmp/all.test.cjs --log-level=error && node --test test/.tmp/all.test.cjs"
+	},
+	"keywords": [
+		"obsidian",
+		"luogu",
+		"markdown"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^22.15.17",
+		"builtin-modules": "^4.0.0",
+		"esbuild": "0.25.5",
+		"obsidian": "latest",
+		"typescript": "^5.8.3"
+	}
+}

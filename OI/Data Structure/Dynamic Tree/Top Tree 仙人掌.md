@@ -735,6 +735,924 @@ Compress 和 Rake 均无法处理这种情况，故我们引入一种新的操�
 
 ![](https://pic.imgdb.cn/item/6573d3dac458853aef160b20.png)
 
+#### 2. 环的收缩
+有了 Twist，静态仙人掌的收缩过程就和树一样了：把环的两个界点之间的两条路径分别 Compress 成两个簇，再用一次 Twist 把它们并成一个环簇，于是"带环的路径"又变成了一条普通路径，可以继续参与后面的 Compress/Rake。
+
+但这里有一个顺序上的约束：
+
+> [!note] Twist 之前必须先 Rake
+> Twist 的两个儿子必须是"干净的路径"。如果环上的点还挂着环外的子树，这些子树必须在 Twist **之前**就 Rake 到环上，因为 Twist 结点只有两个孩子，两条路径之间不能夹着别的边。
+> negiizhao 的原话是："如果要维护边的顺序，还需要处理环的两个界点在环内的子树。类似 compress，这可以在 twist 之前进行 rake，并成为 twist 结点的两个 foster child。然而，并不能 expose 环内和环外的顶点，因为 twist 的两条边之间不能有其他边。"
+
+这也是仙人掌 Top Tree 和树的 Top Tree 在结构上唯一需要额外小心的地方：Rake 与 Twist 有先后依赖——先把旁支收拾干净，再 Twist。
+
+#### 3. 静态仙人掌簇的信息
+对于"两点间最短路"这一类查询，一个簇需要记录的东西其实很少：两个界点 $u,v$、它们之间最短路的长度 $d$、以及簇内点的聚合量。三种合并分别做：
+
++ **Compress**：两段路径首尾相接，$d=d_a+d_b$；
++ **Rake**：$d$ 不变，只把旁支的聚合量并进来；
++ **Twist**：$d=\min(d_a,d_b)$，并在 $d_a=d_b$ 时打上一个"最短路不唯一"的标记。
+
+最后这个标记必须一路往上传：如果最终包含 $u,v$ 的那个簇被打上了标记，就说明 $u,v$ 之间的最短路不唯一，查询应该直接返回 $-2$。这正是动态版本里 $flag$ 字段的来源。
+
+### II. 动态仙人掌
+#### 1. 从树到仙人掌
+前面的 SATT 只能维护树，想搬到仙人掌上，唯一的额外困难就是环：树上两点之间的路径唯一，所以在 Compress 时我们从不担心"该往哪边走"；而仙人掌上同一个环的两个点之间有两条路径，路径查询必须在环上二选一。也就是说，仙人掌相对于树**只多出一种东西**：
+
+> 存在一对端点，它们之间有不止一条路径。
+
+根据边仙人掌的性质（每条边至多属于一个简单环），把每个环缩成一个点之后，仙人掌就变成一棵树，也就是块割点树。这说明仙人掌上的任意一条简单路径，都是在块割点树的路径上"每经过一个环时在该环的两条路径里选一条"。于是除了环那一层需要多做一次决策，其余部分与树完全一样。
+
+回忆环上的情形：设环上两个界点是 $u,v$，它们把环分成两条边不相交的路径 $P_1,P_2$。显然 $d(P_1)$ 和 $d(P_2)$ 中较小的一条就是 $u\to v$ 的最短路；若二者相等，则最短路不唯一。
+
+> [!note] Twist
+> negiizhao 在《用于仙人掌的 top trees》中的说法是：树收缩是不够用的，因为解决不了环的问题；于是需要引入第三种收缩操作 **Twist**，把两条端点相同的边合并为一条。相应地，Top Tree 中会多出一种结点：**Twist 结点，它的两个孩子就是原来的那两条边**。
+> 这里的"两条边"其实是两个**簇**：环的两个端点把环分成两条边不相交的路径，两条路径分别用一棵 Compress Tree 表示（每个簇的两个界点就是环的两个端点），再把它们 Twist 成一条"边"。这样一条"带环的路径"就被收缩为一条普通路径，继续用 Compress Tree 维护即可。
+
+![[Cactus-Twist.png]]
+
+上图左边就是一个最简单的环：$u,v$ 把环分成 $u-a-b-v$ 与 $u-c-v$ 两条路径；中间是它们各自的 Compress Tree 表示；右边用一个 Twist 结点把两个簇并成一个环簇，它在整条"带环路径"里扮演一条权值为 $\min(d_1,d_2)$ 的边。
+
+再加一句在本实现里很关键的话：**Twist 的两条路径之间不能再夹其它边**。因为 Twist 结点只有两个孩子，如果一个顶点在环内还挂着别的子树，这些子树必须在 Twist 之前就 Rake 起来挂到环上。这一点在后文的 `retwist` 里会直接看到。
+
+本文的实现按 negiizhao 提示的简化版来做：**点式 + 三叉树**。
+
++ 不维护边在点周围的顺序，所以 Twist 结点只需要两个儿子（不需要 foster child）；
++ 用"Compress Node 对应原树顶点"的点式实现，于是簇的信息天然带上了界点的点权；
++ 仍然共用一片数组存 Splay 森林，靠一个 `type` 字段区分四类结点。
+
+#### 2. 四类结点
+代码给每个结点存了一个 `type`，一共四种：
+
+| 符号 | 名字 | 对应原图的东西 |
+| --- | --- | --- |
+| `c` | Compress Node | 原图的一个顶点（点权存在 `val` 里） |
+| `b` | base 结点 / 叶簇 | 原图的一条边（`dis` 就是边权） |
+| `r` | Rake Node | 一组轻子树（旁支） |
+| `t` | Twist Node | 一个环（两个孩子是环的两条路径） |
+
+![[Cactus-Structure.png]]
+
++ `c` 结点是主链（Compress Tree）上的结点，同时是原图顶点的代表，`val` 是它的点权。它有三个儿子槽位：`ls/rs` 是簇的两端，`ms` 是挂在这个顶点上的轻子树集合（Rake Tree 的根）。
++ `b` 结点是**叶子**，代表"恰好一条边"的簇。它的 `psiz=0`、`tsiz=0`，只提供两个界点与长度：一条边本身不含内部点。
++ `r` 结点与前一节的 Rake Node 语义完全一致：中儿子是**代表元**（一棵 Compress Tree，代表某条轻子树所在的重链），左右儿子是其余轻子树。`pushup` 时先把自己中儿子的整条路径 `move` 成旁支信息，再把左右儿子 rake 进来。
++ `t` 结点是一个环，两个儿子是环上两条路径对应的簇，界点相同，`cir=1`。
+
+顺带说明一个设计：界点并不单独存储。每个 `b` 结点自带两个端点，Compress 时左簇的 $u$ 与右簇的 $v$ 拼成新的界点对，于是信息一路合并下来，一个簇的界点自然就是它两端 `b` 结点的端点。
+
+> [!note] `isrt` 的含义
+> 这份代码里 `isrt(x)` 写的是 `type(x) != type(fa(x))`，它并不是在判断"$x$ 是不是左右儿子"，而是在判断**这条父子边是不是 Splay 边**。类型相同的父子关系才是 Splay 树内部的边；类型不同的父子关系（比如 `c` 的父亲是 `r`，或者 `c` 的儿子是 `b`、`t`）相当于 LCT 里的虚边，属于 Top Tree 的结构性连边，不参与旋转。
+> 正因如此，`c/b/r/t` 才能共用同一个数组：`pushup` 对 `son[0]/son[1]` 一视同仁地当作"簇的两端"，信息既能沿 Splay 边流动，也能沿结构边流动。
+> 在这份实现中，只有 `c-c` 与 `r-r` 之间会出现 Splay 边，`b`、`t` 在 Splay 意义下永远是叶子（这一条是对随机数据实测得到的）。
+
+#### 3. 簇的信息与四种运算
+一个簇 $C$ 需要记录这些东西：
+$$F(C)=(u,v,d,P,T,flag)$$
+
++ $u,v$：簇的两个界点；
++ $d$：两个界点之间最短路（也就是簇路径）的长度；
++ $P$：簇路径上的点集，用 `psiz,pmin,psum` 表示；
++ $T$：簇内不在簇路径上的点集，用 `tsiz,tmin,tsum` 表示；
++ $flag$：最短路是否不唯一。
+
+在实现里 $P$ 是这样攒出来的：Compress Tree 子树里的每个 `c` 结点恰好贡献一次自己的 `val`（`compress` 的第三个参数或单点簇的 `insert`），而一个簇的两个界点正好是这棵子树里最外层的 `c` 结点，所以它们也被算在 $P$ 里。$T$ 则是"挂在这些结点上的所有旁支，加上环上被舍弃的那条路"。于是恒有 $P\cup T$ 等于簇内所有点、$P\cap T=\varnothing$——这解释了为什么只需要维护两套聚合量：`query1/add1` 只看 $P$，`query2/add2` 只看 $T$（配合 `ms`），两边几乎天然对应。
+
+![[Cactus-Merge.png]]
+
+四种运算就是簇上的四则运算：
+
+```cpp
+dat compress(const dat &a, const dat &b, int w) {
+    return {a.u, b.v, a.dis + b.dis,
+            a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+            a.psiz + b.psiz + 1, min({a.pmin, b.pmin, w}),
+            a.psum + b.psum + w, a.flag || b.flag};
+}
+dat rake(const dat &a, const dat &b) {
+    return {a.u, a.v, a.dis,
+            a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+            a.psiz, a.pmin, a.psum, a.flag};
+}
+dat twist(dat a, dat b) {
+    if (a.dis > b.dis)
+        swap(a, b);
+    if (a.dis == b.dis)
+        return {a.u, a.v, a.dis,
+                a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+                a.psiz + b.psiz, min(a.pmin, b.pmin), a.psum + b.psum, 1};
+    b = b.move();
+    return {a.u, a.v, a.dis,
+            a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+            a.psiz, a.pmin, a.psum, a.flag};
+}
+dat move() const {
+    return {u, v, dis, tsiz + psiz, min(tmin, pmin), tsum + psum,
+            0, MAX, 0, flag};
+}
+```
+
++ **Compress**：两段首尾相接的路径拼起来，$w$ 是中间那个顶点。$d=d_a+d_b$，$P=P_a\cup P_b\cup\{w\}$，$T=T_a\cup T_b$，$flag=flag_a\lor flag_b$。
++ **Rake**：把旁支 $b$ 挂到主链 $a$ 上。路径完全不变（$u,v,d,P$ 全取 $a$），$T=T_a\cup T_b$。
++ **Twist**：两个界点相同的簇合成一个环。若 $d_a>d_b$ 就交换，于是 $a$ 是较短的那条；$d_a=d_b$ 时两条都是最短路，$flag=1$；否则 $d=d_a$、$P=P_a$，而另一条整条路径都变成旁支，对它做一次 `move` 即可：$T=T_a\cup T_b\cup P_b$。
++ **Move**：$P\to T$，把"原本在路径上的东西"整体变成"旁支"，即把 $p$ 三个量并进 $t$ 三个量后清空 $p$。
+
+> [!note] 为什么 rake 里不合并 $P$
+> 代码里 `rake(a,b)` 完全没有把 $b$ 的 $P$ 加进去，这不是漏写：`rake` 的第二个参数只可能是 `r` 结点（`pushup` 中写作 `rake(f(rs(x)), f(ms(x)))`），而 `r` 结点在 `pushup` 的第一步就把中儿子的路径 `move` 掉了，所以它的 $P$ 恒为空（`psiz=0, pmin=INF`）。
+> 同理，`rake` 的结果 `flag` 只取 `a.flag`：$b$ 内部的最短路是否唯一，与当前簇路径是否唯一无关。
+
+#### 4. pushup
+三种结点的 `pushup` 就是把上面的运算按层次拼起来。
+
+```cpp
+void pushup(int x) {
+    if (type(x) == 'c') {
+        if (ls(x) && rs(x)) {
+            if (ms(x))
+                f(x) = compress(f(ls(x)), rake(f(rs(x)), f(ms(x))), val(x));
+            else
+                f(x) = compress(f(ls(x)), f(rs(x)), val(x));
+        } else {
+            if (ls(x) || rs(x))
+                f(x) = f(ls(x) | rs(x));
+            else
+                f(x) = {x, x, 0, 0, MAX, 0, 0, MAX, 0, 0};
+            f(x).insert(val(x));
+            if (ms(x))
+                f(x) = rake(f(x), f(ms(x)));
+        }
+        cir(x) = cir(ls(x)) | cir(rs(x));
+    } else if (type(x) == 'r') {
+        f(x) = f(ms(x)).move();
+        if (ls(x))
+            f(x) = rake(f(x), f(ls(x)));
+        if (rs(x))
+            f(x) = rake(f(x), f(rs(x)));
+    } else if (type(x) == 't') {
+        f(x) = twist(f(ls(x)), f(rs(x)));
+        cir(x) = 1;
+    }
+}
+```
+
++ `c`：左右儿子都在时，先把中儿子 rake 到右儿子上（也可以 rake 到左儿子上，结果一样），再与左儿子、以及自己 `val` 做 Compress；只有一个儿子时用 `f(ls(x)|rs(x))` 这种写法借空结点 0 省掉一次判断，然后 `insert` 自己；一个儿子都没有就是单点簇。最后 `cir` 沿主链取或。
++ `r`：中儿子是代表元的 Compress Tree，它的路径现在整体变成旁支，所以先 `move`，再把左右儿子 rake 进来。注意 `r` 结点自身不提供任何点，`val` 对它没有意义。
++ `t`：两个儿子就是环的两条路径，直接 `twist`，并标记 `cir=1`。
+
+其中 `cir` 表示"这个簇里是否含环"，只在 `link` 判合法性时用到。
+
+#### 5. 懒标记与 pushdown
+懒标记有两个维度：
+
+```cpp
+struct tag {
+    int tlaz, plaz;
+    tag tree() { return {tlaz, 0}; }
+    tag move() { return {tlaz, tlaz}; }
+    friend tag operator*(const tag &x, const tag &y) {
+        return {x.tlaz + y.tlaz, x.plaz + y.plaz};
+    }
+};
+```
+
+`tlaz` 加到簇内**所有**点上（对应 `add2`），`plaz` 只加到**簇路径上**的点（对应 `add1`）。
+
+为什么必须分成两维？对一个环簇来说，"所有点"和"最短路上的点"不是同一个集合：若环的两条路径长度不等，只有较短的那条在 $P$ 里，但两条都在 $T$ 里。子树加要给两条都加，最短路加只能加较短的那条，一个标记没办法同时表达这两种意思。
+
+标记作用到 `dat` 上由重载的 `dat * tag` 完成：
+
+```cpp
+friend dat operator*(const dat &x, const tag &y) {
+    return {x.u, x.v, x.dis,
+            x.tsiz, x.tmin == MAX ? MAX : x.tmin + y.tlaz,
+            x.tsum + 1ll * x.tsiz * y.tlaz,
+            x.psiz, x.pmin == MAX ? MAX : x.pmin + y.plaz,
+            x.psum + 1ll * x.psiz * y.plaz, x.flag};
+}
+```
+
+`pushlaz` 除了更新 `dat`，还要同步维护真正的点权：`if (type(x) == 'c') val(x) += y.plaz;`。因为 `f` 只是摘要，`val` 才是原图的点权，不一起改的话下次 `pushup` 会把它按旧值重新算进去。
+
+![[Cactus-Pushdown.png]]
+
+`pushdown` 按结点类型分流：
+
+```cpp
+if (type(x) == 'c') {
+    pushlaz(ls(x), laz(x));
+    pushlaz(rs(x), laz(x));
+    pushlaz(ms(x), laz(x).tree());
+} else if (type(x) == 'r') {
+    int w = laz(x).tlaz;
+    for (int c = 0; c < 3; c++)
+        pushlaz(son(x, c), {w, 0});
+    pushlaz(ms(x), {0, w});
+} else if (type(x) == 't') {
+    int w = f(ls(x)).dis - f(rs(x)).dis;
+    pushlaz(ls(x), w <= 0 ? laz(x) : laz(x).move());
+    pushlaz(rs(x), w >= 0 ? laz(x) : laz(x).move());
+}
+```
+
++ `c`：左右儿子都在簇路径上，拿走完整标记；中儿子是整棵 Rake Tree，整块都属于旁支，所以只能拿走 `laz.tree()`，也就是只保留 `tlaz`。
++ `r`：Rake 结点整体都是旁支，所以 `tlaz` 要发给所有儿子；但它的**中儿子是一条路径**，对这一份 `tlaz` 来说，中儿子既要加到树信息、又要加到路径信息，所以中儿子除 `{w,0}` 之外还要额外收到 `{0,w}`。这就是 `r` 的 `pushdown` 看起来像重复发了一次标记的原因。
++ `t`：环上的点归 $P$ 还是 $T$ 要看哪条路径短。代码用 $w=f(ls).dis-f(rs).dis$ 判断：
+  + $w<0$：左儿子是簇路径，拿完整标记；右儿子整条都是旁支，拿 `laz.move()`，把 `plaz` 全部转成 `tlaz`；
+  + $w>0$：对称；
+  + $w=0$：两条都是最短路，两边都拿完整标记（`w<=0` 与 `w>=0` 同时成立）。
+
+  这三个分支与 `twist` 里的比较是同一件事在两个位置的体现。
+
+#### 6. access、splice 与 retwist
+`access(x)` 与 LCT 几乎一样：先把 $x$ 旋到根，把它原来的右儿子（更深的那些点）连同中儿子打包成一个新的 Rake 结点挂回去，然后不断 `splice` 向上。差别只在循环内部：
+
+```cpp
+for (; splay(x), fa(x);) {
+    if (type(fa(x)) == 'r')
+        splice(fa(x));
+    else
+        retwist(x);
+}
+```
+
+父亲是 `r`，说明要跨过一棵 Rake Tree，走普通的 `splice`；父亲是 `t`，说明路径要穿过一个环，走 `retwist`。
+
+`splice` 就是前一节 SATT 的 Splice：拆掉一个 Rake 结构，让路径从上面那棵 Compress Tree 继续延伸。核心是三行：
+
+```cpp
+int a = ms(x), b = rs(y);
+setf(a, y, 1);
+setf(b, x, 2);
+pushup(x);
+```
+
+把 $x$ 的中儿子接到 $y$ 的右儿子（让 $y$ 多一个"重儿子"），再把 $y$ 原来的右儿子丢进 $x$ 的中儿子。它改变的是"重链怎么划"，不是原图。
+
+`retwist` 是整份代码最难读的部分，但它做的事一句话就能概括：
+
+> **splice 到环上会改变环的两个端点，于是原来的 Twist 分解失效，必须把 Twist 拆开重新组织。**
+
+![[Cactus-Retwist.png]]
+
+对应 negiizhao 的原话是："这种情形会改变环的端点，与非环上的 splice 相比，我们还需要先对环的两个原端点进行 local splay。"代码里
+
+```cpp
+int a = f(x).u, b = f(x).v;
+splay(b);
+if (ls(b) == y) {
+    splice(fa(b));
+    return retwist(x, p);
+}
+splay(a);
+```
+
+正是对环的两个原端点 $a,b$ 做 local splay。而
+
+```cpp
+if (rs(b)) {
+    int z = newnode('r');
+    setf(rs(b), z, 2), rs(b) = 0;
+    setf(ms(b), z, 0);
+    pushup(z), setf(z, b, 2);
+}
+```
+
+是把 $b$ 上多出来的旁支先 Rake 成一个新的 Rake 结点 $z$（`rs(b)` 当 $z$ 的中儿子、`ms(b)` 当 $z$ 的左儿子）。之所以必须这么做，就是前面强调的那句"**Twist 的两条路径之间不能再夹别的边**"：要把 $b$ 重新作为 Twist 的儿子，就得先把它收拾成一条干净的路径。
+
+其余那些 `setf/pushdown/pushup/pushrev` 只是在 Splay 树上把新的父子关系摆好，**并没有修改原图**。这一点与 LCT 改变 preferred path 的性质完全一致：`retwist` 改变的是"表示"，不是图。
+
+#### 7. link 与 cut
+
+```cpp
+bool link(int x, int y, int w) {
+    if (x == y)
+        return 0;
+    makeroot(x);
+    if (findroot(y) == x) {
+        if (cir(x))
+            return 0;
+        fa(rs(x)) = 0;
+        splay(y), setf(y, x, 1);
+        int z = newnode('t'), e = newnode('b');
+        f(e) = {x, y, w, 0, MAX, 0, 0, MAX, 0, 0};
+        pushdown(y);
+        setf(ls(y), z, 0);
+        setf(e, z, 1);
+        pushup(z), setf(z, y, 0);
+        pushup(y), pushup(x);
+    } else {
+        access(x), access(y);
+        int e = newnode('b');
+        f(e) = {y, x, w, 0, MAX, 0, 0, MAX, 0, 0};
+        setf(e, x, 0);
+        pushup(x), setf(x, y, 1);
+        pushup(y);
+    }
+    return 1;
+}
+```
+
++ $x=y$ 直接非法（自环）。
++ `makeroot(x)` 之后 `findroot(y) != x` 说明两点不连通：直接造一个 `b` 结点当 $x$ 的左儿子，再把 $x$ 挂成 $y$ 的右儿子，没有环。
++ 否则加边一定会成环。此时先看 `cir(x)`：如果这条根路径上已经含环，再加一条边会让某些边属于两个环，不再合法，直接失败——这就是 `cir` 唯一的用途。合法的话，先断开 $x$ 的右儿子（保证 $x,y$ 是路径的两端），再造**一个 `t` 结点和一个 `b` 结点**：`b` 就是新边，`t` 的左儿子是从 $y$ 上剥下来的旧路径、右儿子是新的 `b`，最后把 `t` 挂回 $y$ 的左边。
+
+这与 negiizhao 说的"对于 $\mathrm{link}(v,w)$ 加入一个 Twist 结点 $(u,v)$ 和一个 base 结点 $(u,v)$"完全一致。
+
+`cut` 与之对偶：
+
+```cpp
+bool cut(int x, int y, int w) {
+    if (x == y)
+        return 0;
+    makeroot(x);
+    if (findroot(y) != x)
+        return 0;
+    access(y);
+    fa(ls(y)) = 0;
+    splay(x), setf(x, y, 0), pushup(y);
+    if (type(rs(x)) == 'b') {
+        if (f(rs(x)).dis != w)
+            return 0;
+        clear(rs(x)), rs(x) = 0;
+        fa(x) = ls(y) = 0;
+        pushup(x), pushup(y);
+        return 1;
+    } else if (type(rs(x)) == 't') {
+        int z = rs(x), k = 0;
+        pushdown(z);
+        if (type(son(z, k)) != 'b' || f(son(z, k)).dis != w)
+            k = 1;
+        if (type(son(z, k)) != 'b' || f(son(z, k)).dis != w)
+            return 0;
+        setf(son(z, !k), x, 1), pushup(x), pushup(y);
+        clear(z);
+        return 1;
+    } else
+        return 0;
+}
+```
+
+先判连通，然后把 $x\to y$ 的路径暴露成"$x$ 的左儿子是 $y$"的形态。
+
++ 若 `rs(x)` 是 `b` 结点且 `dis == w`，说明要删的是一条普通边，直接回收它。
++ 若 `rs(x)` 是 `t` 结点，就在它的两个儿子里找那条权值为 $w$ 的 `b` 结点；把另一条路径接回 $x$ 的右儿子处，然后回收整个 `t`——这就是"环消失"。
++ 其余情况说明这条边上带环、或者权值对不上，失败。
+
+注意这里只比对了 `dis`：题面保证只要存在权值为 $w$ 的边就随便删一条，而同一个 `(x,y,w)` 在仙人掌里出现的次数不影响正确性。
+
+#### 8. 查询与修改
+四个操作短得可怕，因为所有困难都已经压缩进 `pushup` 里了。
+
+```cpp
+pair<int, ll> pquery(int x, int y) {
+    makeroot(x);
+    if (findroot(y) != x)
+        return {-1, -1};
+    if (f(x).flag)
+        return {-2, -2};
+    return {f(x).pmin, f(x).psum};
+}
+pair<int, ll> tquery(int x, int y) {
+    makeroot(x);
+    if (findroot(y) != x)
+        return {-1, -1};
+    splay(y);
+    return {min(f(ms(y)).tmin, val(y)), f(ms(y)).tsum + val(y)};
+}
+bool pupdate(int x, int y, int w) {
+    makeroot(x);
+    if (findroot(y) != x)
+        return 0;
+    if (f(x).flag)
+        return 0;
+    return pushlaz(x, {0, w}), 1;
+}
+bool tupdate(int x, int y, int w) {
+    makeroot(x);
+    if (findroot(y) != x)
+        return 0;
+    splay(y), val(y) += w;
+    return pushlaz(ms(y), {w, 0}), pushup(y), 1;
+}
+```
+
++ `query1`：`makeroot(v)` 之后 `findroot(u)`，不连通返回 `-1 -1`，`flag` 为真返回 `-2 -2`，否则直接取根的 $P$。换根之后 $v$ 被旋到根，它的簇恰好就是 $v\to u$ 这条路径，两个端点都是这棵 Compress Tree 里的 `c` 结点，所以 $P$ 正好是整条路径上的点。
++ `query2`：换根为 $v$、`findroot(u)`、`splay(u)` 之后，$u$ 的右儿子方向已经被剥空，**$u$ 的所有后代恰好全在它的中儿子里**，这就是"子仙人掌 $u$"，最后把 $u$ 自己的点权补上。
++ `add1`：直接给整条路径打 `{0,w}`。
++ `add2`：先 `splay(u)` 把结构显式暴露出来，给中儿子打 `{w,0}`，再单独处理 $u$ 自己，最后 `pushup(u)`。
+
+#### 9. 完整代码
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+namespace IO {
+    const int __SIZE = (1 << 20) + 1;
+    char ibuf[__SIZE], *iS, *iT, obuf[__SIZE],
+        *oS = obuf, *oT = oS + __SIZE - 1, _c, qu[55];
+    int __f, qr, _eof;
+#define Gc()                                                                   \
+    (iS == iT ? (iT = (iS = ibuf) + fread(ibuf, 1, __SIZE, stdin),             \
+                 (iS == iT ? EOF : *iS++))                                     \
+              : *iS++)
+    void flush() {
+        fwrite(obuf, 1, oS - obuf, stdout);
+        oS = obuf;
+    }
+    void gc(char &x) {
+        x = Gc();
+    }
+    void pc(char x) {
+        *oS++ = x;
+        if (oS == oT)
+            flush();
+    }
+    void pstr(const char *s) {
+        int __len = strlen(s);
+        for (__f = 0; __f < __len; ++__f)
+            pc(s[__f]);
+    }
+    void gstr(char *s) {
+        for (_c = Gc(); _c < 32 || _c > 126 || _c == ' ';)
+            _c = Gc();
+        for (; _c > 31 && _c < 127 && _c != ' ' && _c != '\n' && _c != '\r';
+             ++s, _c = Gc())
+            *s = _c;
+        *s = 0;
+    }
+    template <class I> bool read(I &x) {
+        _eof = 0;
+        for (__f = 1, _c = Gc(); (_c < '0' || _c > '9') && !_eof; _c = Gc()) {
+            if (_c == '-')
+                __f = -1;
+            _eof |= _c == EOF;
+        }
+        for (x = 0; _c <= '9' && _c >= '0' && !_eof; _c = Gc()) {
+            x = x * 10 + (_c & 15), _eof |= _c == EOF;
+        }
+        x *= __f;
+        return !_eof;
+    }
+    template <class I> void print(I x) {
+        if (!x)
+            pc('0');
+        if (x < 0) {
+            pc('-');
+            x = -x;
+        }
+        while (x) {
+            qu[++qr] = x % 10 + '0', x /= 10;
+        }
+        while (qr)
+            pc(qu[qr--]);
+    }
+    struct Flusher_ {
+        ~Flusher_() { flush(); }
+    } io_flusher_;
+} // namespace IO
+using IO::gstr;
+using IO::pc;
+using IO::print;
+using IO::pstr;
+using IO::read;
+
+class DynamicCactus {
+private: /* const */
+    static constexpr const int MAX = INT_MAX;
+
+public: /* Types */
+    struct tag {
+        int tlaz, plaz;
+        tag() { tlaz = plaz = 0; }
+        tag(int tlaz, int plaz) : tlaz(tlaz), plaz(plaz) {}
+        bool empty() { return (tlaz == 0 && plaz == 0); }
+        tag tree() { return {tlaz, 0}; }
+        tag move() { return {tlaz, tlaz}; }
+        friend tag operator*(const tag &x, const tag &y) {
+            return {x.tlaz + y.tlaz, x.plaz + y.plaz};
+        }
+    };
+    struct dat {
+        int u, v, dis;
+        int tsiz, tmin, psiz;
+        ll tsum, psum;
+        int pmin;
+        bool flag;
+        dat() {
+            u = v = dis = tsiz = psiz = 0, tmin = pmin = INT_MAX;
+            tsum = psum = 0, flag = 0;
+        }
+        dat(int u, int v, int dis, int tsiz, int tmin, ll tsum, int psiz,
+            int pmin, ll psum, bool flag)
+            : u(u), v(v), dis(dis), tsiz(tsiz), tmin(tmin), psiz(psiz),
+              tsum(tsum), psum(psum), pmin(pmin), flag(flag) {}
+        void rev() { swap(u, v); }
+        void insert(int w) { psiz++, pmin = min(pmin, w), psum += w; }
+        dat move() const {
+            return {u, v, dis, tsiz + psiz, min(tmin, pmin), tsum + psum,
+                    0, INT_MAX, 0, flag};
+        }
+        friend dat operator*(const dat &x, const tag &y) {
+            return {x.u, x.v, x.dis,
+                    x.tsiz, x.tmin == INT_MAX ? INT_MAX : x.tmin + y.tlaz,
+                    x.tsum + 1ll * x.tsiz * y.tlaz,
+                    x.psiz, x.pmin == INT_MAX ? INT_MAX : x.pmin + y.plaz,
+                    x.psum + 1ll * x.psiz * y.plaz, x.flag};
+        }
+    };
+    struct node {
+        char type, rev, cir;
+        int son[3], fa, val;
+        dat f;
+        tag laz;
+        node() { type = rev = cir = 0, son[0] = son[1] = son[2] = fa = val = 0; }
+    };
+
+public: /* Basic */
+    vector<node> st;
+    vector<int> trash;
+    DynamicCactus(int n) {
+        st.reserve(5 * n + 1024);
+        trash.reserve(n + 64);
+        st.resize(n + 1), st[0].f.tmin = st[0].f.pmin = MAX;
+        for (int i = 1; i <= n; i++)
+            type(i) = 'c';
+    }
+    int newnode(char c) {
+        int id;
+        if (!trash.empty())
+            id = trash.back(), trash.pop_back();
+        else
+            id = st.size(), st.push_back(node());
+        return type(id) = c, id;
+    }
+    void clear(int x) { st[x] = node(), trash.push_back(x); }
+    node &operator[](int x) { return st[x]; }
+    void setval(int x, int w) { val(x) = w, pushup(x); }
+
+private: /* Aux */
+    int &son(int x, int y) { return st[x].son[y]; }
+    int &fa(int x) { return st[x].fa; }
+    int &val(int x) { return st[x].val; }
+    char &rev(int x) { return st[x].rev; }
+    char &cir(int x) { return st[x].cir; }
+    char &type(int x) { return st[x].type; }
+    dat &f(int x) { return st[x].f; }
+    tag &laz(int x) { return st[x].laz; }
+    int &ls(int x) { return son(x, 0); }
+    int &rs(int x) { return son(x, 1); }
+    int &ms(int x) { return son(x, 2); }
+    bool isrt(int x) { return type(x) != type(fa(x)); }
+    bool dir(int x) { return son(fa(x), 1) == x; }
+    void setf(int x, int f, int typ) {
+        if (x)
+            fa(x) = f;
+        son(f, typ) = x;
+    }
+
+private: /* Push */
+    dat compress(const dat &a, const dat &b, int w) {
+        return {a.u, b.v, a.dis + b.dis,
+                a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+                a.psiz + b.psiz + 1, min({a.pmin, b.pmin, w}),
+                a.psum + b.psum + w, a.flag || b.flag};
+    }
+    dat twist(dat a, dat b) {
+        if (a.dis > b.dis)
+            swap(a, b);
+        if (a.dis == b.dis)
+            return {a.u, a.v, a.dis,
+                    a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+                    a.psiz + b.psiz, min(a.pmin, b.pmin), a.psum + b.psum, 1};
+        b = b.move();
+        return {a.u, a.v, a.dis,
+                a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+                a.psiz, a.pmin, a.psum, a.flag};
+    }
+    dat rake(const dat &a, const dat &b) {
+        return {a.u, a.v, a.dis,
+                a.tsiz + b.tsiz, min(a.tmin, b.tmin), a.tsum + b.tsum,
+                a.psiz, a.pmin, a.psum, a.flag};
+    }
+    void pushup(int x) {
+        if (type(x) == 'c') {
+            if (ls(x) && rs(x)) {
+                if (ms(x))
+                    f(x) = compress(f(ls(x)), rake(f(rs(x)), f(ms(x))), val(x));
+                else
+                    f(x) = compress(f(ls(x)), f(rs(x)), val(x));
+            } else {
+                if (ls(x) || rs(x))
+                    f(x) = f(ls(x) | rs(x));
+                else
+                    f(x) = {x, x, 0, 0, MAX, 0, 0, MAX, 0, 0};
+                f(x).insert(val(x));
+                if (ms(x))
+                    f(x) = rake(f(x), f(ms(x)));
+            }
+            cir(x) = cir(ls(x)) | cir(rs(x));
+        } else if (type(x) == 'r') {
+            f(x) = f(ms(x)).move();
+            if (ls(x))
+                f(x) = rake(f(x), f(ls(x)));
+            if (rs(x))
+                f(x) = rake(f(x), f(rs(x)));
+        } else if (type(x) == 't') {
+            f(x) = twist(f(ls(x)), f(rs(x)));
+            cir(x) = 1;
+        }
+    }
+    void pushrev(int x) {
+        if (!x)
+            return;
+        f(x).rev();
+        swap(ls(x), rs(x)), rev(x) ^= 1;
+    }
+    void pushlaz(int x, tag y) {
+        if (!x)
+            return;
+        laz(x) = laz(x) * y;
+        f(x) = f(x) * y;
+        if (type(x) == 'c')
+            val(x) += y.plaz;
+    }
+    void pushdown(int x) {
+        if (rev(x)) {
+            pushrev(ls(x));
+            pushrev(rs(x));
+            rev(x) = 0;
+        }
+        if (laz(x).empty())
+            return;
+        if (type(x) == 'c') {
+            pushlaz(ls(x), laz(x));
+            pushlaz(rs(x), laz(x));
+            pushlaz(ms(x), laz(x).tree());
+        } else if (type(x) == 'r') {
+            int w = laz(x).tlaz;
+            for (int c = 0; c < 3; c++)
+                pushlaz(son(x, c), {w, 0});
+            pushlaz(ms(x), {0, w});
+        } else if (type(x) == 't') {
+            int w = f(ls(x)).dis - f(rs(x)).dis;
+            pushlaz(ls(x), w <= 0 ? laz(x) : laz(x).move());
+            pushlaz(rs(x), w >= 0 ? laz(x) : laz(x).move());
+        }
+        laz(x) = tag();
+    }
+    void pdrt(int x) {
+        if (!isrt(x))
+            pdrt(fa(x));
+        pushdown(x);
+    }
+
+private: /* Rot */
+    void rotate(int x) {
+        int y = fa(x), z = fa(y), k = dir(x);
+        if (z)
+            *find(st[z].son, st[z].son + 3, y) = x;
+        fa(x) = z;
+        setf(son(x, !k), y, k), setf(y, x, !k);
+        pushup(y);
+    }
+    void splay(int x) {
+        pdrt(x);
+        for (int y; y = fa(x), !isrt(x); rotate(x))
+            if (!isrt(y))
+                rotate(dir(x) ^ dir(y) ? x : y);
+        pushup(x);
+    }
+
+private: /* Access */
+    void del(int x) {
+        int y = fa(x);
+        pushdown(x);
+        if (ls(x)) {
+            int z = ls(x);
+            fa(z) = 0;
+            for (; rs(z); z = rs(z))
+                pushdown(z);
+            splay(z);
+            setf(rs(x), z, 1);
+            pushup(z);
+            setf(z, y, 2);
+        } else
+            setf(rs(x), y, 2);
+        pushup(y), clear(x);
+    }
+    void splice(int x) {
+        splay(x);
+        int y = fa(x);
+        splay(y);
+        pushdown(y), pushdown(x);
+        if (fa(y) && type(fa(y)) == 't')
+            return retwist(y, ms(x));
+        int a = ms(x), b = rs(y);
+        setf(a, y, 1);
+        setf(b, x, 2);
+        pushup(x);
+        if (!b)
+            del(x);
+        else
+            pushup(y);
+    }
+    void retwist(int x, int p = 0) {
+        int y = fa(x);
+        splay(fa(y));
+        pushdown(y);
+        int a = f(x).u, b = f(x).v;
+        splay(b);
+        if (ls(b) == y) {
+            splice(fa(b));
+            return retwist(x, p);
+        }
+        splay(a);
+        fa(rs(a)) = 0;
+        splay(b), setf(b, a, 1), pushup(b);
+        pushdown(a), pushdown(b);
+        pushdown(y), pushdown(x);
+        if (p)
+            pushdown(ms(x));
+        int k = dir(x);
+        setf(ls(x), y, k);
+        if (rs(b)) {
+            int z = newnode('r');
+            setf(rs(b), z, 2), rs(b) = 0;
+            setf(ms(b), z, 0);
+            pushup(z), setf(z, b, 2);
+        }
+        setf(son(y, !k), b, 0);
+        pushrev(rs(x));
+        setf(rs(x), b, 1);
+        pushup(b), setf(b, y, !k);
+        pushup(y), setf(y, x, 0);
+        if (p)
+            del(fa(p));
+        setf(p, x, 1);
+        pushup(x), setf(x, a, 1);
+        pushup(a);
+    }
+    void access(int x) {
+        splay(x);
+        if ((!fa(x) || type(fa(x)) != 't') && rs(x)) {
+            int y = newnode('r');
+            pushdown(x);
+            setf(ms(x), y, 0);
+            setf(rs(x), y, 2), rs(x) = 0;
+            setf(y, x, 2);
+            pushup(y), pushup(x);
+        }
+        for (; splay(x), fa(x);) {
+            if (type(fa(x)) == 'r')
+                splice(fa(x));
+            else
+                retwist(x);
+        }
+    }
+    void makeroot(int x) { access(x), pushrev(x); }
+    int findroot(int x) {
+        access(x);
+        for (; ls(x); x = ls(x))
+            pushdown(x);
+        return splay(x), x;
+    }
+
+public: /* Link-Cut */
+    bool link(int x, int y, int w) {
+        if (x == y)
+            return 0;
+        makeroot(x);
+        if (findroot(y) == x) {
+            if (cir(x))
+                return 0;
+            fa(rs(x)) = 0;
+            splay(y), setf(y, x, 1);
+            int z = newnode('t'), e = newnode('b');
+            f(e) = {x, y, w, 0, MAX, 0, 0, MAX, 0, 0};
+            pushdown(y);
+            setf(ls(y), z, 0);
+            setf(e, z, 1);
+            pushup(z), setf(z, y, 0);
+            pushup(y), pushup(x);
+        } else {
+            access(x), access(y);
+            int e = newnode('b');
+            f(e) = {y, x, w, 0, MAX, 0, 0, MAX, 0, 0};
+            setf(e, x, 0);
+            pushup(x), setf(x, y, 1);
+            pushup(y);
+        }
+        return 1;
+    }
+    bool cut(int x, int y, int w) {
+        if (x == y)
+            return 0;
+        makeroot(x);
+        if (findroot(y) != x)
+            return 0;
+        access(y);
+        fa(ls(y)) = 0;
+        splay(x), setf(x, y, 0), pushup(y);
+        if (type(rs(x)) == 'b') {
+            if (f(rs(x)).dis != w)
+                return 0;
+            clear(rs(x)), rs(x) = 0;
+            fa(x) = ls(y) = 0;
+            pushup(x), pushup(y);
+            return 1;
+        } else if (type(rs(x)) == 't') {
+            int z = rs(x), k = 0;
+            pushdown(z);
+            if (type(son(z, k)) != 'b' || f(son(z, k)).dis != w)
+                k = 1;
+            if (type(son(z, k)) != 'b' || f(son(z, k)).dis != w)
+                return 0;
+            setf(son(z, !k), x, 1), pushup(x), pushup(y);
+            clear(z);
+            return 1;
+        } else
+            return 0;
+    }
+
+public: /* Query */
+    pair<int, ll> pquery(int x, int y) {
+        makeroot(x);
+        if (findroot(y) != x)
+            return {-1, -1};
+        if (f(x).flag)
+            return {-2, -2};
+        return {f(x).pmin, f(x).psum};
+    }
+    pair<int, ll> tquery(int x, int y) {
+        makeroot(x);
+        if (findroot(y) != x)
+            return {-1, -1};
+        splay(y);
+        return {min(f(ms(y)).tmin, val(y)), f(ms(y)).tsum + val(y)};
+    }
+
+public: /* Update */
+    bool pupdate(int x, int y, int w) {
+        makeroot(x);
+        if (findroot(y) != x)
+            return 0;
+        if (f(x).flag)
+            return 0;
+        return pushlaz(x, {0, w}), 1;
+    }
+    bool tupdate(int x, int y, int w) {
+        makeroot(x);
+        if (findroot(y) != x)
+            return 0;
+        splay(y), val(y) += w;
+        return pushlaz(ms(y), {w, 0}), pushup(y), 1;
+    }
+};
+
+int main() {
+    int n, m;
+    read(n), read(m);
+    DynamicCactus tril(n);
+    for (int i = 1, x; i <= n; i++)
+        read(x), tril.setval(i, x);
+    for (int x, y, z; m--;) {
+        static ll w;
+        static char op[99];
+        gstr(op), read(x), read(y);
+        if (*op == 'l')
+            read(z), pstr(tril.link(x, y, z) ? "ok\n" : "failed\n");
+        else if (*op == 'c')
+            read(z), pstr(tril.cut(x, y, z) ? "ok\n" : "failed\n");
+        else if (*op == 'q' && op[5] == '1')
+            tie(x, w) = tril.pquery(x, y), print(x), pc(' '), print(w), pc('\n');
+        else if (*op == 'q')
+            tie(x, w) = tril.tquery(x, y), print(x), pc(' '), print(w), pc('\n');
+        else if (*op == 'a' && op[3] == '1')
+            read(z), pstr(tril.pupdate(x, y, z) ? "ok\n" : "failed\n");
+        else
+            read(z), pstr(tril.tupdate(x, y, z) ? "ok\n" : "failed\n");
+    }
+    return 0;
+}
+```
+
+#### 10. 复杂度
+`splice` 的次数仍然均摊 $\mathcal O(\log n)$，与树上的分析相同（只是常数略大），每次操作均摊 $\mathcal O(\log n)$，于是总复杂度 $\mathcal O((n+m)\log n)$。结点回收保证了辅助结点总数始终是 $\mathcal O(n+m)$，不会随操作次数增长，空间复杂度 $\mathcal O(n+m)$。
+
+#### 11. 空间：辅助结点数到底要多少
+这份实现只开一片结点池（原实现是定长数组，改写版是 `vector` + 预分配），所以必须知道辅助结点最多有多少个。四类结点分别数：
+
++ `c`：每个原图顶点恰好一个，共 $n$ 个，初始化之后不再增删；
++ `b`：每条边一个。沙漠里两个点之间最多两条重边，而"环"给连通块带来的额外边数不超 Cactus-Merge. Png过环数，于是边数 $\le 2n-2$；
++ `t`：每个环一个，环数 $\le n-1$（"顶点 $1$ 与其余每个点连两条重边"这种 2-环扇可以把两个界同时取到）；
++ `r`：Rake 结点只会出现在轻子树的位置上。每个点最多一个重儿子，所以轻边数 $\le n-1$，而所有 Rake Tree 的内部结点数不超过它们的叶子数，即不超过轻边数，于是 $r\le n-1$。
+
+四项相加：
+$$n+(2n-2)+(n-1)+(n-1)=5n-4.$$
+
+这个界是**紧**的：$n=50000$ 时用 2-环扇的数据实测，池子高水位正好是 $249996=5n-4$。而普通随机大数据只会用到 $3.5n$ 左右，因为"边数取满"和"环数取满"和"轻边取满"很难同时发生。
+
+所以预分配 $5n$ 个结点就够了，**完全不需要跟着 $m$ 走**：结点数只取决于"当前这张图"，与操作次数无关（$b$、$t$ 随 link/cut 增删，$r$ 随 access 变动的也只是位置而不是数量）。这一点在卡空间的时候很关键——把池子按 $n$ 开，$\mathcal O(n)$ 的空间就写死了。
 
 ## References
 + [[1] OI-wiki](https://oi-wiki.org/ds/top-tree)

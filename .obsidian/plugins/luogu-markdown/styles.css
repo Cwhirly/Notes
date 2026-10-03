@@ -1,0 +1,286 @@
+/*
+ * Luogu Markdown — styles
+ *
+ * The colour palette mirrors the Luogu Markdown editor's own preview so that a
+ * note looks the same here as it does on luogu.com.cn. Each accent is split
+ * into a border tone and a tinted background, and the dark-theme block
+ * redefines the same four variables so nothing hardcodes a light-only value.
+ */
+
+/*
+ * Defined on `body` rather than on the plugin's own containers: the Live
+ * Preview decorations live on editor lines, which are not inside a container
+ * element, so a container-scoped palette left them with no colours at all.
+ */
+body {
+	--luogu-blue: #3498db;
+	--luogu-blue-tint: #ebf5fb;
+	--luogu-blue-text: #1f618d;
+	--luogu-green: #2ecc71;
+	--luogu-green-tint: #eafaf1;
+	--luogu-green-text: #196f3d;
+	--luogu-orange: #e67e22;
+	--luogu-orange-tint: #fef5e7;
+	--luogu-orange-text: #b9770e;
+	--luogu-red: #e74c3c;
+	--luogu-red-tint: #fdedec;
+	--luogu-red-text: #943126;
+	--luogu-radius: 6px;
+}
+
+body.theme-dark {
+	--luogu-blue: #4aa3df;
+	--luogu-blue-tint: #1a2f42;
+	--luogu-blue-text: #a9d3f0;
+	--luogu-green: #4ecb7f;
+	--luogu-green-tint: #1e3323;
+	--luogu-green-text: #a6e0bb;
+	--luogu-orange: #e59340;
+	--luogu-orange-tint: #3d2b14;
+	--luogu-orange-text: #f0c391;
+	--luogu-red: #e8695c;
+	--luogu-red-tint: #3b1b1b;
+	--luogu-red-text: #f0a79e;
+}
+
+.luogu-block {
+	margin: 0;
+}
+
+/* --- Callouts ------------------------------------------------------------
+ *
+ * Nothing to style. Callouts are rendered in Obsidian's own markup
+ * (`details.callout[data-callout]` with `callout-title` / `callout-content`), so
+ * the theme supplies the icons, colours, dark-mode variants and fold behaviour.
+ * An earlier version imitated Luogu's appearance with its own classes, which
+ * looked out of place next to native callouts.
+ */
+
+
+/* --- Alignment containers (:::align{center|left|right}) ------------------
+ *
+ * Just alignment: no border or background, so it reads as part of the note.
+ */
+
+.luogu-align {
+	margin: 0;
+}
+
+.luogu-align-center {
+	text-align: center;
+}
+
+.luogu-align-right {
+	text-align: right;
+}
+
+.luogu-align-left {
+	text-align: left;
+}
+
+/* --- Epigraph (:::epigraph[author]) -------------------------------------
+ *
+ * Rendered as a blockquote so the theme's quote styling applies; only the
+ * attribution is adjusted.
+ */
+
+.luogu-epigraph-author {
+	text-align: right;
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+/* --- Tables, including Luogu's `^` / `<` merge markers ------------------- */
+
+.luogu-table-wrapper {
+	margin: 1.2em 0;
+	overflow-x: auto;
+}
+
+.luogu-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.luogu-table th,
+.luogu-table td {
+	border: 1px solid var(--background-modifier-border);
+	padding: 6px 10px;
+	vertical-align: middle;
+}
+
+.luogu-table th {
+	background: var(--background-secondary);
+	font-weight: 600;
+}
+
+.luogu-table .luogu-cell-center {
+	text-align: center;
+}
+
+.luogu-table .luogu-cell-right {
+	text-align: right;
+}
+
+.luogu-table .luogu-cell-left {
+	text-align: left;
+}
+
+/* `::cute-table{tuack}`: centred, heavier header, the look used for test data. */
+.luogu-table-tuack .luogu-table th,
+.luogu-table-tuack .luogu-table td {
+	text-align: center;
+}
+
+.luogu-table-tuack .luogu-table th {
+	background: var(--luogu-blue-tint);
+	color: var(--luogu-blue-text);
+}
+
+/* --- Headings, paragraphs, lists and quotes inside a Luogu block --------- */
+
+.luogu-heading {
+	margin: 0.8em 0 0.4em;
+}
+
+.luogu-heading:first-child {
+	margin-top: 0;
+}
+
+.luogu-p {
+	margin: 0.6em 0;
+}
+
+.luogu-p:first-child {
+	margin-top: 0;
+}
+
+.luogu-p:last-child {
+	margin-bottom: 0;
+}
+
+.luogu-list {
+	margin: 0.6em 0;
+	padding-inline-start: 1.6em;
+}
+
+.luogu-quote {
+	margin: 0.8em 0;
+	padding-inline-start: 1em;
+	border-inline-start: 3px solid var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+/* --- Code blocks (```cpp line-numbers lines=2-4) ------------------------ */
+
+.luogu-code {
+	margin: 1.2em 0;
+	padding: 0;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--luogu-radius);
+	background: var(--background-secondary);
+	overflow-x: auto;
+}
+
+.luogu-code-inner {
+	display: block;
+	padding: 10px 0;
+	font-family: var(--font-monospace);
+	font-size: 0.9em;
+	line-height: 1.5;
+	background: transparent;
+}
+
+.luogu-code-line {
+	display: flex;
+	gap: 12px;
+	padding: 0 14px;
+	white-space: pre;
+}
+
+.luogu-code-line.is-highlighted {
+	background: var(--text-selection);
+	box-shadow: inset 3px 0 0 var(--luogu-orange);
+}
+
+.luogu-code-lineno {
+	flex: 0 0 auto;
+	min-width: 2.5em;
+	text-align: right;
+	color: var(--text-faint);
+	user-select: none;
+}
+
+.luogu-code-text {
+	flex: 1 1 auto;
+}
+
+/* --- Bilibili embeds (![](bilibili:BV...)) ------------------------------ */
+
+.luogu-bilibili {
+	margin: 1.2em 0;
+	padding: 12px 14px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--luogu-radius);
+	background: var(--background-secondary);
+}
+
+.luogu-bilibili-badge {
+	display: inline-block;
+	margin-right: 8px;
+	padding: 1px 6px;
+	border-radius: 3px;
+	font-size: 0.8em;
+	background: #fb7299;
+	color: #fff;
+}
+
+.luogu-bilibili-hint {
+	margin-top: 6px;
+	font-size: 0.8em;
+	color: var(--text-faint);
+}
+
+/* --- Shared inline bits ------------------------------------------------- */
+
+.luogu-inline-code {
+	padding: 1px 4px;
+	border-radius: 3px;
+	background: var(--background-secondary);
+	font-family: var(--font-monospace);
+}
+
+.luogu-task {
+	list-style: none;
+}
+
+.luogu-task-checkbox {
+	margin-right: 6px;
+}
+
+.luogu-hr {
+	border: none;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+/* --- Live Preview (editor) ----------------------------------------------
+ *
+ * In the editor a container is replaced by a real `details` element, so the
+ * callout styles above do the work and only the surrounding block needs
+ * adjusting: CodeMirror inserts the widget between lines, and the browser
+ * default margin would otherwise double up with the line height.
+ */
+
+.luogu-lp-widget {
+	margin: 0.4em 0;
+}
+
+/* The widget is a block, so the lines it replaces must not leave a gap. */
+.luogu-lp-widget > .callout {
+	margin: 0;
+}
+
+/* Make it obvious the title line folds the callout while editing. */
+.luogu-lp-widget .callout-title:hover {
+	cursor: pointer;
+}

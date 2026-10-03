@@ -213,8 +213,9 @@ $$
 这样的效率是很慢的，我们考虑优化。  
 ### BI-2 离散傅里叶变换 （DFT）
 
-> [!warning] 注意 
-> 离散傅里叶变换本质上是作用在多项式函数上的变换，由于不涉及极限与微分，姑且不做区分。
+:::warning[注意] 
+ 离散傅里叶变换本质上是作用在多项式函数上的变换，由于不涉及极限与微分，姑且不做区分。
+:::
 
 根据前文所述，有一种技巧性的方法：    
 首先，确定 $n+m+1$ 个不同的值 $x_1,x_2,\cdots,x_{n+m+1}$，然后根据这 $n+m+1$ 个值将 $f(x),g(x)$ 转换成点值表示，即 $\mathscr{F}_{\set{x_i}}(f(x)),\mathscr{F}_{\set{x_i}}(g(x))$。   
@@ -289,12 +290,12 @@ $$
 可以发现，在第 $i$ 次向下递归时，这个系数序列就会反转二进制下的第 $i$ 位。  
 例如：
 $$
-\begin{gather}
-a_0,a_1,a_2,a_3,a_4,a_5,a_6,a_7\\
-a_0,a_2,a_4,a_6|a_1,a_3,a_5,a_7\\
-a_0,a_4|a_2,a_6|a_1,a_5|a_3,a_7\\
-a_0|a_4|a_2|a_6|a_1|a_5|a_3|a_7\\
-\end{gather}
+\begin{aligned}
+&a_0,a_1,a_2,a_3,a_4,a_5,a_6,a_7\\
+&a_0,a_2,a_4,a_6|\ a_1,a_3,a_5,a_7\\
+&a_0,a_4|a_2,\ a_6|\ a_1,a_5|\ a_3,a_7\\
+&a_0|\ a_4|\ a_2|a_6|\ a_1|\ a_5|a_3|\ a_7\\
+\end{aligned}
 $$
 然后，可以注意到，$(0)_2=000,(1)_2=001,(2)_2=010,(3)_2=011,(4)_2=100,(5)_2=101,(6)_2=110,(7)_2=111$。  
 按二进制位翻转后就可以得到最后的结果。  
@@ -654,7 +655,6 @@ $$
 
 ## Basic- $\text {XIII}$ -多项式开根
 注意，显然开根操作会得到两个和为 $0$ 的解，因此在实际应用中，我们通常取常数项较小的解。  
-（此处感谢 LRC 与 Nueryim\_ 学长的提醒）
 ### BXIII-1 $\exp$ 法
 在解题过程中，我们常用到这一变换：$a^b=\mathrm{e}^{b\ln(a)}$。  
 根据此式，则有 $\sqrt{a}=\mathrm{e}^{\frac{\ln(a)}{2}}$。  
@@ -840,10 +840,10 @@ $$
 $$
 于是我们用 NTT 计算 $(u*v)$，翻转后每一位乘上 $(j!)^{-1}$ 即为 $f(x+c)$ 的系数。  
 ## Algorithm- $\text {V}$ -插值  
-在高中数学的数列一章中，我们经常需要根据某个数列的前若干项来计算其通项公式。  
-一般来说，这些数列的规律都易于观察，例如：${a_n}=\{1,3,7,13,21,31,\cdots\}$，容易观察出其通项公式为 $a_n=x^2-x+1$。    
+我们有时需要根据某个数列的前若干项来计算其通项公式。  
+一般来说，这些数列的最简单的规律都易于观察，例如：${a_n}=\{1,3,7,13,21,31,\cdots\}$，容易观察出其通项公式为 $a_n=x^2-x+1$。    
 那么，机械化的计算机该如何解决此类问题？  
-或者是，当数列的前若干难以得到简单规律时，该如何得出通项公式？  
+或者是，当数列的前若干难以得到简单规律时，该如何得出一个恰当通项公式？  
 进一步的，若给出连续函数的某一些点值，如何求出该函数的某一个可能值？  
 我们需要引入新的公式。  
 插值，即给定 $n$ 个点值 $x_1,x_2,\cdots,x_n$ 以及 $n$ 个函数值 $y_1,y_2,\cdots,y_n$，求出一个连续函数 $f(x)$，使得：$\forall i\in[1,n]\cap\mathbb{Z},f(x_i)=y_i$。   
@@ -883,7 +883,7 @@ $$
 插值在在动态规划优化方面也有相应应用。
 ## Algorithm- $\text {VI}$ -连续点值平移
 给你 $f(0),f(1),f(2),\cdots,f(n-1)$ 的值，求出 $f(\delta),f(\delta+1),f(\delta+2),\cdots,f(\delta+n-1)$ 的值。  
-这里仅讨论 $\delta\ge n$ 的情况。  
+不妨设 $\delta\ge n$。  
 显然的做法是，先进行拉格朗日插值将 $f$ 的表达式求出来，然后对 $c,c+1,\cdots,c+n-1$ 做多点求值。  
 复杂度瓶颈是拉格朗日插值的 $O(n^2)$，可以用快速插值做到 $O(n\log^2n)$。  
 这里有一种更快的 $O(n\log n)$ 做法。  
@@ -1102,7 +1102,7 @@ $$
 
  > [!note] 关于复合逆 
  > 注意到复合逆的定义是 $F\circ G=x$ 而非 $F\circ G=1$，首先这是因为如果条件是 $F\circ G=1$，不难证明只有 $[x^0]F=1$ 时具有唯一平凡解，即 $G=0$，显然没有讨论价值。  
- > 同时，对于复合运算来说，其构成的幺半群 $(\mathbb{F}((x)),\circ)$ 的单位元为恒等映射 $x$，此时可称为 $\mathrm{id}$，而非 “$1$ “。
+ > 同时，对于复合运算来说，其构成的幺半群 $(\mathbb{F}((x)),\circ)$ 的单位元为恒等映射 $x$，此时可称为 $\mathrm{id}$，而非 “$1$”。
 
 根据以上引理，可以得出常见的 $4$ 个版本的拉格朗日反演，这里假定 $G=F^{\langle -1 \rangle}\in \mathbb{F}((x)),\Lambda\in\mathbb{F}((x))$：  
 $$
@@ -1134,7 +1134,7 @@ $$
 $$
 最后一步基于形式 Laurent 级数复合形式 Laurent 级数仍然是形式 Laurent 级数以及其形式导数的定义而得出。      
 但是，上面的式子在 $n=0,k<0$ 时无法给出常数项的值，因此拓展到公式 $3,4$。   
-其证明过程与公式 $2$ 证明过程类似。  
+其证明过程与公式 $2$ 证明过程几乎一致。  
 ## Senior- $\text {II}$ -常系数齐次线性递推
 ### SII-1 斐波那契数列快速递推
 注意，与一般的定义不同，我们认为数列 $\{a_n\}$ 的首项为 $a_0$。  
@@ -1214,7 +1214,7 @@ $$
 > [!error] **易错点**
 > 当代入到特征多项式的定义式，即：$\det(A\mathrm{I}_n-A)$ 时，将 $A\mathrm{I}_n$ 看作是矩阵乘法，于是 $\det(A\mathrm{I}_n-A)=\det(A-A)=\det(0)=0$，看起来是一个平凡结论。  
 
-实际上，该定理并不平凡，我们需要将 $A\mathrm{I}_n$ 看作是**标量乘法**，而非矩阵乘法，同时，如果参量为矩阵，最终得到的 $0$ 应当表述为 “$\textbf{0}$”（零矩阵，粗体），即零矩阵，而非标量 $0$。   
+该定理并不平凡，我们需要将 $A\mathrm{I}_n$ 看作是**标量乘法**，而非矩阵乘法，同时，如果参量为矩阵，最终得到的 $0$ 应当表述为 “$\textbf{0}$”（零矩阵，粗体），即零矩阵，而非标量 $0$。   
 换句话说，在最后计算多项式值之前，矩阵 $A$ 是与一个正常的形式记号 $x$ 无异的。
 ##### 证明前置定义
 **【伴随矩阵】**
@@ -1467,9 +1467,9 @@ $$
 所以有 $\displaystyle\sum_{i=1}^d\psi_ix^{i-1}=x^n\bmod (x^d-\displaystyle\sum_{i=0}^{d-1}x^ic^{d-i})$。  
 再快速幂的过程中不断进行多项式取模即可算出 $\psi$，然后与 $f_0,f_1,\cdots,f_{d-1}$ 分别相乘（或者是说“内积“）并求和即可。  
 复杂度为 $O(d\log d\log n)$。  
-实际上这类多项式相关的算法的复杂度应当准确表示成：$O(\mathsf{M}(d)\log n)$,，其中 $\mathsf{M}(d)$ 是多项式乘法的复杂度。  
-### SII-3 Bostan-Mori 算法  
-一个较新的算法，由 Alin Bostan 和 Ryuhei Mori 提出。 
+实际上这类多项式相关的算法的复杂度应当准确表示成：$O(\mathsf{M}(d)\log n)$，其中 $\mathsf{M}(d)$ 是多项式乘法的复杂度。  
+### SII-3 Bostan-Mori 算法
+一个较新但常见的算法，由 Alin Bostan 和 Ryuhei Mori 提出。 
 用该算法解决常系数齐次线性递推问题，复杂度仍然是 $O(\mathsf{M}(d)\log n)$，但是常数更小，且更容易理解。
 #### SII-3-1 有理函数远处系数求值
 我们知道，一个形式幂级数的常数项若非零，则其存在乘法逆。  
@@ -1494,7 +1494,7 @@ $$
 若 $n$ 为奇数，则 $[x^n]\left(\dfrac{a(x^2)}{u(x^2)}+x\dfrac{b(x^2)}{u(x^2)}\right)=[x^n]x\dfrac{b(x^2)}{u(x^2)}=[x^{\lfloor\frac{n}{2}\rfloor}]\dfrac{b(x)}{u(x)}$。  
 若 $n$ 为偶数，则 $[x^n]\left(\dfrac{a(x^2)}{u(x^2)}+x\dfrac{b(x^2)}{u(x^2)}\right)=[x^n]\dfrac{a(x^2)}{u(x^2)}=[x^{\frac{n}{2}}]\dfrac{a(x)}{u(x)}$。
 因此问题转化成了求出 $a,b,u$。  
-由于每次我们仅仅需要两次多项式乘法即可将问题的 $n$ 缩小一半，所以时间复杂度 $\mathsf{M}(d)\log n$，其中 $d$ 是 $P,Q$ 中较大一个的次数。
+由于每次我们仅仅需要两次多项式乘法即可将问题的 $n$ 缩小一半，所以时间复杂度 $\mathsf{M}(d)\log n$，其中 $d$ 是 $P,Q$ 次数的较大值。
 #### SII-3-2 规约为常系数齐次线性递推
 考虑将常系数齐次线性递推问题规约为有理函数系数求值问题。  
 首先，不妨考虑，对于形式幂级数 $F(x),G(x)$，$\dfrac{F(x)}{G(x)}=H(x)$，那么 $H(x)$ 有没有一个递推公式？  
@@ -1512,7 +1512,7 @@ Q(x)&=x^d\Gamma(x^{-1})
 $$
 注意，$\Gamma(x^{-1})$ 可能不是多项式，但是 $x^d\Gamma(x^{-1})$ 一定是。  
 所以这保证了 $P(x),Q(x)$ 一定是正常的多项式。
-所以在求解常系数齐次线性递推问题时，按上述方法构造出 $P,Q$，然后使用 Bostan-Mori 算法即可。  
+所以在求解常系数齐次线性递推问题时，按上述方法构造出 $P,Q$，然后 Bostan-Mori 即可。  
 依然可以继续优化常数，有 LSB-First 算法，但是并不常用。
 ## Senior- $\text{III}$ -常系数非齐次线性递推
 ### SIII-1 矩阵做法
@@ -1591,41 +1591,65 @@ $$
 虽然 $T$ 是无穷项的形式幂级数，但是由于我们仅需要 $f_d,f_{d+1},\cdots,f_{d+m}$，所以多点求值求出 $T$ 的前 $(d+m)$ 项即可。  
 求出 $f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m}$ 之后，算出 $x^n\bmod G$ 的系数向量再点乘 $(f_0,f_1,\cdots,f_{d-1},f_d,f_{d+1},\cdots,f_{d+m})$ 即可。
 复杂度 $O(m\log^2m+\mathsf{M}(k)\log n)$。  
-### SIII-2 差分做法
-我们考虑前向差分算子 $\Delta$，记 $(\Delta f)(i)=f(i)-f(i-1)$，首项不变。  
-为了方便，我们去掉括号，直接记作 $\Delta f(i)$。但是要注意它是“算子”，即作用在函数本身上的，从函数到函数的映射，而非作用在某个函数值上。  
-那么由数学归纳法，容易证明 $\Delta^m f(i)=\displaystyle\sum_{j=0}^m\binom{m}{j}(-1)^jf(i-j)$。  
-所以可得出：  
+### SIII-2 更快做法
+本质是卡常数，复杂度没有变化。
+
+| 记号                | 含义                                  |
+| ----------------- | ----------------------------------- |
+| $F(x)$            | $\sum_{n\ge0}a_nx^n$                |
+| $D(x)$            | $1-\sum_{i=1}^{k}c_ix^i$，$\deg D=k$ |
+| $C(x)$            | $F\cdot D \bmod x^k$                |
+| $t_j$             | $P$ 的牛顿系数 $\Delta^jP(0)$            |
+| $R(x)$            | $P(n)$ 的齐次化分子，$\deg R\le d$         |
+| $\mathcal P_k(x)$ | $\sum_{n<k}P(n)x^n$                 |
+| $W(x)$            | $(1-x)^{d+1}$                       |
+用 $D$ 乘 $F$，$x^n$ 的系数正好是 $a_n$ 减去递推式右边那串：
+$$F\cdot D=\sum_{n\ge0}\left(a_n-\sum_{i=1}^{k}c_ia_{n-i}\right)x^n$$
+当 $n\ge k$ 时它就是 $P(n)$，所以
+$$F\cdot D=\underbrace{\sum_{n<k}\left(a_n-\sum_{i=1}^{k}c_ia_{n-i}\right)x^n}_{C(x)\ =\ (F\cdot D)\bmod x^k}+\sum_{n\ge k}P(n)x^n .$$
+$C$ 只由初值决定：把 $F$ 截到 $x^k$ 再乘 $D$、再截到 $x^k$ 即可，即
+$$C(x)=\left(\left(\sum_{i<k}a_ix^i\right)\cdot D(x)\right)\bmod x^k .$$
+于是 $F=\dfrac{C}{D}+\dfrac{1}{D}\displaystyle\sum_{n\ge k}P(n)x^n$。麻烦都在第二项。
+$P$ 是 $d$ 次多项式，被一阶差分算子 $(\mathrm E-1)^{d+1}$ 灭掉（$\mathrm E$ 是 $f(n)\mapsto f(n+1)$，在生成函数上是乘 $(1-x)^{-1}$）。等价地
+$$\sum_{n\ge0}P(n)x^n=\frac{R(x)}{(1-x)^{d+1}} .$$
+把 $P$ 写成牛顿形式 $P(x)=\displaystyle\sum_{j=0}^{d}t_j\dbinom{x}{j}$，其中 $t_j=\Delta^jP(0)$，这一步需要下降幂多项式和普通多项式之间的转换操作，后文将会讲到。
+又 $\displaystyle\sum_{n\ge0}\dbinom{n}{j}x^n=\dfrac{x^j}{(1-x)^{j+1}}$，代入并通分：
 $$
 \begin{aligned}
-f_i&=P(i)+\sum_{j=1}^dc_jf_{i-j}\\
-\implies\Delta^{m+1} f_i&=\Delta^{m+1}P(i)+\sum_{j=1}^dc_j\sum_{k=0}^{m+1}\binom{m+1}{k}(-1)^kf_{i-j-k}\\
-&=\Delta^{m+1}P(i)+\sum_{j=1}^dc_j\Delta^{m+1}f_{i-j}
+&\sum_{n\ge0}P(n)x^n=\sum_{j=0}^{d}\frac{t_jx^j}{(1-x)^{j+1}}
+=\frac{1}{(1-x)^{d+1}}\sum_{j=0}^{d}t_jx^j(1-x)^{d-j}\\
+\ \implies &\
+R(x)=\sum_{j=0}^{d}t_jx^j(1-x)^{d-j}
 \end{aligned}
 $$
-然后，注意到对于多项式 $P(x)=\displaystyle\sum_{i=0}^m p_ix^i$ 来说，$\Delta P(x)=\displaystyle\sum_{i=0}^m p_ix^i-\displaystyle\sum_{i=0}^m p_i\sum_{j=0}^i\binom{i}{j}x^j(-1)^{i-j}$，发现 $x^m$ 项被抵消了，因此差分之后得到一个 $(m-1)$ 次多项式。  
-因此，根据数学归纳法，$\Delta^{m+1}P(i)=0$。  
-所以可以得到：
-$$
-\Delta^{m+1}f_i=\sum_{j=1}^dc_j\Delta^{m+1}f_{i-j}
-$$
-惊人的结果，这是一个齐次递推式。  
-因此      
+这个式子容易转换成普通的卷积形式。
+递推只对 $n\ge k$ 成立，所以要从 $P$ 的整段级数里减掉前 $k$ 项：
+$$\mathcal P_k(x)=\sum_{n=0}^{k-1}P(n)x^n=\left(R(x)\cdot(1-x)^{-(d+1)}\right)\bmod x^k$$
+（$R\cdot(1-x)^{-d-1}$ 就是 $\displaystyle\sum_nP(n)x^n$，截断到 $k$ 项即可。这一步不需要多点求值：$(1-x)^{-(d+1)}=\displaystyle\sum_t\dbinom{d+t}{t}x^t$，一次卷积即可。）
+整理得到：
+$$\begin{aligned}
+F&=\frac{C}{D}+\frac{1}{D}\left(\sum_{n\ge0}P(n)x^n-\mathcal P_k\right)
+=\frac{C}{D}+\frac{R\cdot(1-x)^{-d-1}-\mathcal P_k}{D}\\
+&=\frac{\overbrace{(C-\mathcal P_k)(1-x)^{d+1}+R}^{A(x)}}{\underbrace{(1-x)^{d+1}D(x)}_{B(x)}}
+\end{aligned}$$
+于是改递推数列就被转化成了化成了有理函数系数的形式！直接 Bostan-Mori 即可，实测速度比前面的做法快了将近 $6$ 倍。  
+
+---
 ## Senior- $\text {IV}$ -多项式复合
 多项式复合，本质上是**形式幂级数复合截断**，即求出 $f(g(x))$ 的前 $n$ 项，即 $\displaystyle\sum_{i=0}^n([x^i]f(x))g(x)^i\bmod(x^{n+1})$。   
 ### SIV-2 Kinoshita–Li 算法
-首先最朴素的做法显然是直接按照原式计算，复杂度为 $O(n^2\log n)$，根据分块等技巧可以优化到 $O(n^2+n\sqrt{n}\log n)$，复杂度依然很高。  
+首先最朴素的做法显然是直接按照原式计算，复杂度为 $O(n^2\log n)$，使用分块等技巧可以优化到 $O(n^2+n\sqrt{n}\log n)$，复杂度依然很高。  
 R.P.Brent 和 H.T.Kung 在 1978 年发表的论文中将多项式复合优化到 $O((n\log n)^{1.5})$，但是比较复杂且常数较大。   
 Yasunori Kinoshita 和李白天提出了 $O(\mathsf{M}(n)\log n)$ 做法，这一成果在 2024 年发表，可以说是较为前沿的理论。
 Kinoshita-Li 算法基于二元 Bostan-Mori 算法。  
 朴素的 Bostan-Mori 解决的是有理函数求远处系数的问题。  
 二元有理函数亦同理。  
 
-# PART 5 —— 形式幂级数算法扩展
+# PART 5 —— 多项式算法扩展
 
 <div STYLE="page-break-after: always;"></div>
 
-# PART 6 —— 形式幂级数应用
+# PART 6 —— 多项式算法应用
 ## Application- $\text{I}$ -整式递推
 ### ApI-1 快速阶乘算法
 关于组合数 $\dbinom{n}{m}\bmod p$ 的问题，最朴素的办法是递推公式，即杨辉三角进行 $O(nm)$ 递推。  
@@ -1636,15 +1660,14 @@ Kinoshita-Li 算法基于二元 Bostan-Mori 算法。
 我们需要更加快速的计算阶乘的方法。  
 $n!$，即 $n^{\underline{n}}$，当 $n$ 为正整数时定义为 $\displaystyle\prod_{i=1}^ni$，同时有 $n!:=\Gamma(n+1),\Gamma(n)=\displaystyle\int_{0}^{\infty}t^{n-1}\mathrm{e}^{-t}\mathrm{d}t$。  
 该结论直接用分部积分证明。  
-此处我们仅仅考虑 $n$ 为正整数的情况。  
-考虑经典技巧：分块。  
+此处我们仅仅考虑 $n$ 为正整数的情况。    
 将从 $1$ 到 $n$ 的所有整数分为若干个块 $[1,\Delta],[\Delta+1,2\Delta],\cdots,[(k-1)\Delta+1,k\Delta]$。  
 如果 $\Delta\nmid n$，则末尾还剩下一个长度小于 $\Delta$ 的散块。
 对于每一个块内的整数，分别计算其乘积，然后再将每一个块的答案乘起来。
 对于一个块 $[i\Delta+1,(i+1)\Delta]$ 来说，其乘积为 $\displaystyle\prod_{j=1}^{\Delta}(i\Delta+j)$。  
 不妨定义 $f(x)=\displaystyle\prod_{j=1}^{\Delta}(i\Delta+j)$，答案就是 $\displaystyle\prod_{i=0}^{k-1}f(i\Delta)\times\displaystyle\prod_{i=k\Delta+1}^ni$。  
 #### SIV-1-1 多点求值
-$f(x)$ 使用分治乘法得到系数，考虑直接多点求值计算出 $f(0),f(\Delta),f(2\Delta),\cdots,f((k-1)\Delta)$，直接相乘，最后的散块暴力乘起来，复杂度 $O(\Delta\log^2\Delta+\max(k,\Delta)\log^2(\max(k,\Delta))+\Delta)$，显然当 $\Delta=\lfloor\sqrt{n}\rfloor$ 时复杂度最优为 $O(\sqrt{n}\log^2\sqrt{n})$，这等价于 $O(\sqrt{n}\log^2n)$，因为 $\log\sqrt{n}=\frac{1}{2}\log n$。
+$f(x)$ 使用分治乘法得到系数，考虑直接多点求值计算出 $f(0),f(\Delta),f(2\Delta),\cdots,f((k-1)\Delta)$，直接相乘，最后的散块暴力乘起来，复杂度 $O(\Delta\log^2\Delta+\max(k,\Delta)\log^2(\max(k,\Delta))+\Delta)$，显然当 $\Delta=\lfloor\sqrt{n}\rfloor$ 时复杂度最优为 $O(\sqrt{n}\log^2n)$。
 
 <div STYLE="page-break-after: always;"></div>
 

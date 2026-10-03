@@ -1,5 +1,6 @@
 ---
 前置知识: "[[Möbius Inversion]]"
+前置知识 2: "[[Definite Integral]]"
 难度: "8"
 ---
 ## 0. 前言

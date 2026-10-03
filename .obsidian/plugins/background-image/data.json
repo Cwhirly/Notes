@@ -1,8 +1,8 @@
 {
-  "imageUrl": "",
+  "imageUrl": "https://cdn.luogu.com.cn/upload/image_hosting/ciebmdnk.png",
   "darkImageUrl": "https://cdn.luogu.com.cn/upload/image_hosting/5tj4dsci.png",
-  "opacity": 0.1,
-  "bluriness": "0px",
+  "opacity": 0.03,
+  "bluriness": "5px",
   "inputContrast": false,
   "position": "center",
   "size": "cover",
